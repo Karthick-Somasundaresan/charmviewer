@@ -1,0 +1,24 @@
+{
+  "name": "charmviewer",
+  "version": "1.0.0",
+  "description": "A convenient tool for viewing logs.",
+  "main": "fileReader.js",
+  "dependencies": {
+    "async": "^3.1.0",
+    "lucene": "^2.1.0",
+    "event-stream": "^4.0.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "node queryResolver.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "."
+  },
+  "keywords": [
+    "log"
+  ],
+  "author": "Karthick Somasundaresan",
+  "license": "BSD-2-Clause"
+}
