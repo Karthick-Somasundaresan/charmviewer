@@ -172,3 +172,5 @@ async.whilst(
         // 5 seconds have passed, n = 5
     }
 )
+
+module.exports = {"evalExpression": evalExpression}

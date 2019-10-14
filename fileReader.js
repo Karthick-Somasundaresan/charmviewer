@@ -1,7 +1,9 @@
 var fs = require('fs')
 var es = require('event-stream')
 var readline = require('readline')
-var eventemit = require('event')
+var EventEmitter = require('events')
+var readlineEmitter = new EventEmitter()
+var qr = require('./queryResolver')
 
 const rl = readline.createInterface({
     input: process.stdin,
@@ -16,6 +18,7 @@ const rl = readline.createInterface({
               var s = fs.createReadStream(filename)
                         .pipe(es.split())
                         .pipe(es.mapSync(function(line){
+                            readlineEmitter.emit('avail-line', line)
                         }))
                         .on('error', function(error){
                             console.log("Error occured while reading")
@@ -29,3 +32,8 @@ const rl = readline.createInterface({
       })
       rl.close()
   });
+
+readlineEmitter.on('avail-line', function(readLine){
+    qr.evalExpression()
+
+})
