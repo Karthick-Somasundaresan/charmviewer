@@ -6,9 +6,12 @@ var readlineEmitter = new EventEmitter()
 
 
 let myBundle = new Bundle("TestBundle1")
-myBundle.addQuery("((Incident01 AND Scenario03) AND Running)", "Blue")
-myBundle.addQuery("((Incident02 AND Scenario03) OR Stopped)", "RED")
-myBundle.addQuery("((Stopped AND Scenario03) OR Incident03)", "GREEN")
+myBundle.addQuery("((Incident01 AND Scenario03) AND Scenario02)", "Blue")
+// myBundle.addQuery("((Incident02 AND Scenario03) OR Stopped)", "RED")
+// myBundle.addQuery("((Stopped AND Scenario03) OR Incident03)", "GREEN")
+myBundle.addQuery("((Scenario01 AND Running) AND (Incident02 OR Incident01))", "PURPLE")
+myBundle.addQuery("((Incident02 AND Scenario01) AND Scenario02)", "GREEN")
+// myBundle.addQuery("((Incident03 AND Scenario01) AND Scenario03)", "GREEN")
 console.log("queryList size:", myBundle.getQueryListSize())
 console.log("Query List:")
 queryObj = myBundle.getQueryList()
@@ -40,7 +43,7 @@ Object.keys(queryObj).forEach(element => {
     console.log(queryObj[element].query)
 });
 console.log("Bundle Export: ", myBundle.export())
-var s = fs.createReadStream("testfile.log")
+var s = fs.createReadStream("test/testfile.log")
                         .pipe(es.split())
                         .pipe(es.mapSync(function(line){
                             readlineEmitter.emit('avail-line', line)
