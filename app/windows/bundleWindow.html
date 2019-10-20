@@ -1,0 +1,71 @@
+<html>
+    <title>Bundle</title>
+    <body>
+        <style>
+            .opt:nth-child(even) {
+                background:deepskyblue;
+            }
+            .opt:nth-child(odd) {
+                background:lightblue;
+            }
+            .shwLst{
+                font-size: large;
+            }
+            .bndlDiv {
+                float: left;
+                padding-inline-end:6pt;
+                font-size: large;
+            }
+            .shwLst-bndl {
+                width: 15em;
+            }
+            .shwLst-qry {
+                width: 25em;
+            }
+            .btnImg{
+                height: 15;
+                width: 15;
+            }
+        </style>
+        <div class="bndlDiv">
+            <!--Bundle names-->
+            <p>Bundle List</p>
+            <div>
+                    <select class="shwLst shwLst-bndl" name="LstBndl" size = 5>
+                            <option class="opt" value="Bundle1">TestBundle1</option>
+                            <option class="opt" value="Bundle2">TestBundle2</option>
+                            <option class="opt" value="Bundle3">TestBundle3</option>
+                            <option class="opt" value="Bundle4">TestBundle4</option>
+                            <option class="opt" value="Bundle5">TestBundle5</option>
+                        </select>
+            </div>
+            <div class="bndlDiv">
+                    <button class="btnClss" type="button" value="addBundle"><img class="btnImg" src="../../resources/icons/plus.png"></button>
+                    <button class="btnClss" type="button" value="removeBundle"><img class="btnImg" src="../../resources/icons/minus.png"></button>
+                    <button class="btnClss" type="button" value="import"><img class="btnImg" src="../../resources/icons/download.png"></button>
+                    <button class="btnClss" type="button" value="export"><img class="btnImg" src="../../resources/icons/upload.png"></button>
+            </div>
+            
+        </div>
+        <div class="bndlDiv">
+            <!--Query list-->
+            <p>Queries in the selected bundle</p>
+            <div>
+                    <select class="shwLst shwLst-qry" name="LstBndl" size = 5>
+                            <option value="Query1">TestQuery1</option>
+                            <option value="Query2">TestQuery2</option>
+                            <option value="Query3">TestQuery3</option>
+                            <option value="Query4">TestQuery4</option>
+                            <option value="Query5">TestQuery5</option>
+                        </select>
+            </div>
+            <div class="bndlDiv">
+                    <button class="btnClss" type="button" value="addQuery"><img class="btnImg" src="../../resources/icons/plus.png"></button>
+                    <button class="btnClss" type="button" value="removeQuery"><img class="btnImg" src="../../resources/icons/minus.png"></button>
+                    <button class="btnClss" type="button" value="moveUp"><img class="btnImg" src="../../resources/icons/up-arrow.png"></button>
+                    <button class="btnClss" type="button" value="moveDown"><img class="btnImg" src="../../resources/icons/down-arrow.png"></button>
+            </div>
+            
+        </div>
+    </body>
+</html>

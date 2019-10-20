@@ -10,9 +10,12 @@
     "lucene": "^2.1.0",
     "util": "^0.12.1"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "electron": "^6.0.12"
+  },
   "scripts": {
-    "test": "node queryResolver.js"
+    "test": "node queryResolver.js",
+    "start": "electron app/main.js"
   },
   "repository": {
     "type": "git",
