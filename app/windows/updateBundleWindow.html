@@ -1,0 +1,54 @@
+<html>
+    <title>Update Bundle</title>
+    <body>
+        <style>
+            .btnImg{
+                height: 15;
+                width: 15;
+            }
+        </style>    
+        <div class="dispBndlName">
+            <label>BundleName</label>
+            <input id="txtBndlName" type="text">
+            <input id="bndlEnable" type="checkbox">
+        </div>
+        <div class="queryDispArea">
+            <label>Enter Query</label>
+            <p></p>
+            <!--<input id="qryTxt" type="text"> -->
+            <textarea id="qryTxt" rows="5" cols="35"></textarea>
+            <label>Foreground</label>
+            <input type="color" name="logFgCol" id="clrFg" value="#000000">
+            <label>Background</label>
+            <input type="color" name="logBgCol" id="clrBg" value="#FFFFFF">
+            <input type="button" value="AddQuery" id="btnAddQuery">
+        </div>
+        <div>
+            <!-- Query List Display Area-->
+            <table id="tblQryLst">
+                <tbody id="tblBdyQryLst">
+                    <tr>
+                        <th>Query</th>
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>query1</td>
+                        <td><button class="btnClss" id="delQuery"><img class="btnImg" src="../../resources/icons/trash.png"></button></td>
+                    </tr>
+                    <tr>
+                        <td>query2</td>
+                        <td><button class="btnClss" id="delQuery"><img class="btnImg" src="../../resources/icons/trash.png"></button></td>
+                    </tr>
+                    <tr>
+                        <td>query3</td>
+                        <td><button class="btnClss" id="delQuery"><img class="btnImg" src="../../resources/icons/trash.png"></button></td>
+                    </tr>
+                    <tr>
+                        <td>query4</td>
+                        <td><button class="btnClss" id="delQuery"><img class="btnImg" src="../../resources/icons/trash.png"></button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </body>
+</html>
