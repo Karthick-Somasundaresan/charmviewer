@@ -1,4 +1,4 @@
-const Bundle = require('../lib/Bundle')
+const {Bundle} = require('../lib/Bundle')
 var fs = require('fs')
 var es = require('event-stream')
 var EventEmitter = require('events')

@@ -1,4 +1,4 @@
-const BundleHandler = require('../lib/BundleHandler')
+const {BundleHandler} = require('../lib/BundleHandler')
 
 var appBundleHandler = new BundleHandler()
 
