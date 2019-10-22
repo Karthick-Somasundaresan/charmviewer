@@ -1,4 +1,5 @@
 const {BundleHandler} = require('../lib/BundleHandler')
+const path = require('path')
 
 var appBundleHandler = new BundleHandler()
 
@@ -38,3 +39,11 @@ console.log("All Bundles: ", appBundleHandler.getAllBundles())
 console.log("Update QueryList of Bundle2")
 appBundleHandler.updateBundle("testBundle2", queryList3)
 console.log("Exported testBundle2: ", appBundleHandler.exportBundle("testBundle2"))
+
+var dataStoreBundleHandler = new BundleHandler(__dirname)
+console.log("All Bundles: ", dataStoreBundleHandler.getAllBundles())
+if (dataStoreBundleHandler.getAllBundles().length > 0) {
+    dataStoreBundleHandler.createBundle("dataStoreBundle2", queryList2)
+} else {
+    dataStoreBundleHandler.createBundle("dataStoreBundle1", queryList1)
+}
