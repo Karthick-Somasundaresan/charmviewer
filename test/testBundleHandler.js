@@ -1,6 +1,10 @@
-const {BundleHandler} = require('../lib/BundleHandler')
+const BundleHandler = require('../lib/BundleHandler').BundleHandler
+const handlerEvent = require('../lib/BundleHandler').handlerEvent
 const path = require('path')
 
+handlerEvent.on('bundle-load-done', function(){
+    console.log("All bundles loaded from previous session")
+})
 var appBundleHandler = new BundleHandler()
 
 var queryList1 = [ 
@@ -47,3 +51,5 @@ if (dataStoreBundleHandler.getAllBundles().length > 0) {
 } else {
     dataStoreBundleHandler.createBundle("dataStoreBundle1", queryList1)
 }
+
+// console.log(handlerEvent)
