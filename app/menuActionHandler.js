@@ -17,11 +17,21 @@ function openBundleWindow(item, focusedWindow){
     win.on('close', ()=>{win = null})
     win.loadURL(modalPath)
     win.on('ready-to-show', function(){
-        console.log("Emitting event Show-Bundle-Window")
-        win.webContents.send("Show-Bundle-Window")
         win.show()
     })
+    win.on('did-finish-load', function(){
+        console.log("Emitting event Show-Bundle-Window")
+        win.webContents.send("Show-Bundle-Window")
+    })
 }
+
+ipc.on('Show-Bundle-Edit-Window', function(){
+    console.log("Received Show-Bundle-Edit-Window")
+})
+
+ipc.on('Test-Msg', function(event,args){
+    console.log("Received test msg in menuActionHandler.js")
+})
 
 module.exports = { 
     openBundleWindow: openBundleWindow

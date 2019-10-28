@@ -2,6 +2,7 @@ const { app, BrowserWindow, Menu} = require('electron')
 const ipc = require('electron').ipcMain
 const actionHandler = require("./menuActionHandler")
 const appManager = require("./appManager")
+const path = require('path')
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win
@@ -82,8 +83,8 @@ function createApplicationMenu(bundleList){
                
         })
     }
-    console.log(JSON.stringify(template))
-    console.log(typeof(template))
+    // console.log(JSON.stringify(template))
+    // console.log(typeof(template))
     let menu = Menu.buildFromTemplate(template)
     Menu.setApplicationMenu(menu)
 }
@@ -149,4 +150,30 @@ app.on('activate', () => {
 // code. You can also put them in separate files and require them here.
 ipc.on("Show-Bundle-Window", function(){
     console.log("Received event 'shhow-bundle-window'")
+})
+
+ipc.on('Test-Msg', function(event,args){
+    console.log("Received test msg in main.js")
+    event.sender.send("Test-Msg-Reply", "aloooo")
+})
+
+ipc.on("Show-Bundle-Edit-Window", function(){
+    console.log("Received Event Show-Bundle-Edit-Window")
+    let modalPath = path.join("file://", __dirname, "./windows/updateBundleWindow.html")
+    win = new BrowserWindow({height:280, width:760,webPreferences: {
+        nodeIntegration: true
+      },
+     resizable: false,
+    maximizable: false})
+    win.on('close', ()=>{win = null})
+    win.loadURL(modalPath)
+    win.webContents.openDevTools()
+    win.webContents.on('ready-to-show', function(){
+        console.log(" UpdateBundleWindow ready to show")
+        win.show()
+    })
+    win.webContents.on('did-finish-load',function(){
+        console.log("Emitting event Show-Bundle-Edit-Window")
+        win.webContents.send("Show-Bundle-Edit-Window", appManager.getBundleHandler())
+    })
 })

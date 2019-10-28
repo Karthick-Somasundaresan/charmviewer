@@ -1,11 +1,12 @@
 <html>
     <title>Update Bundle</title>
     <body>
-        <style>
+        <style id="updtBndlWnd_styl">
             .btnImg{
                 height: 15;
                 width: 15;
             }
+            #row1 {background-color: brown; color: cyan;}
         </style>    
         <div class="dispBndlName">
             <label>BundleName</label>
@@ -21,9 +22,9 @@
             <input type="color" name="logFgCol" id="clrFg" value="#000000">
             <label>Background</label>
             <input type="color" name="logBgCol" id="clrBg" value="#FFFFFF">
-            <input type="button" value="AddQuery" id="btnAddQuery">
+            <button id="btnAddQuery" value="Add Query">Add Query</button>
         </div>
-        <div>
+        <div style="border-style: groove;">
             <!-- Query List Display Area-->
             <table id="tblQryLst">
                 <tbody id="tblBdyQryLst">
@@ -31,8 +32,8 @@
                         <th>Query</th>
                         <th></th>
                     </tr>
-                    <tr>
-                        <td>query1</td>
+                    <!-- <tr>
+                        <td id="row1">Q1</td>
                         <td><button class="btnClss" id="delQuery"><img class="btnImg" src="../../resources/icons/trash.png"></button></td>
                     </tr>
                     <tr>
@@ -46,9 +47,14 @@
                     <tr>
                         <td>query4</td>
                         <td><button class="btnClss" id="delQuery"><img class="btnImg" src="../../resources/icons/trash.png"></button></td>
-                    </tr>
+                    </tr> -->
                 </tbody>
             </table>
         </div>
+        <div style="align-self:center;">
+            <button id="updtBndlWn_save" value="Save Bundle">Save Bundle</button>
+            <button id="updtBndlWn_cancel" value="Cancel Bundle">Cancel</button>
+        </div>
+        <script src="../updateBundleWindow.js"></script>
     </body>
 </html>

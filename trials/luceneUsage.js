@@ -17,13 +17,13 @@ async.whilst(
                         callback(null, quitLoop)
                     } else {
                         let res = lucene.parse(answer)
-                        console.log(JSON.stringify(res))
+                        // console.log(JSON.stringify(res))
                         callback(null, quitLoop)
                     }
                 })
     },
     function (err, n) {
-        console.log("Finished")
+        // console.log("Finished")
         rl.close()
         // 5 seconds have passed, n = 5
     }
