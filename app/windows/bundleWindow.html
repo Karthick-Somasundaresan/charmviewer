@@ -31,7 +31,7 @@
             <!--Bundle names-->
             <p>Bundle List</p>
             <div>
-                    <select class="shwLst shwLst-bndl" name="LstBndl" size = 5>
+                    <select id="bndWnd_bndlLst" class="shwLst shwLst-bndl" name="LstBndl" size = 5>
                             <option class="opt" value="Bundle1">TestBundle1</option>
                             <option class="opt" value="Bundle2">TestBundle2</option>
                             <option class="opt" value="Bundle3">TestBundle3</option>
@@ -40,10 +40,10 @@
                         </select>
             </div>
             <div class="bndlDiv">
-                    <button id="addBndlBtn" class="btnClss" type="button" value="addBundle"><img class="btnImg" src="../../resources/icons/plus.png"></button>
-                    <button id="rmBndlBtn" class="btnClss" type="button" value="removeBundle"><img class="btnImg" src="../../resources/icons/minus.png"></button>
-                    <button id="imprtBndlBtn" class="btnClss" type="button" value="import"><img class="btnImg" src="../../resources/icons/download.png"></button>
-                    <button id="exptBndlBtn" class="btnClss" type="button" value="export"><img class="btnImg" src="../../resources/icons/upload.png"></button>
+                    <button id="bndWnd_addBndlBtn" class="btnClss" type="button" value="addBundle"><img class="btnImg" src="../../resources/icons/plus.png"></button>
+                    <button id="bndWnd_rmBndlBtn" class="btnClss" type="button" value="removeBundle"><img class="btnImg" src="../../resources/icons/minus.png"></button>
+                    <button id="bndWnd_imprtBndlBtn" class="btnClss" type="button" value="import"><img class="btnImg" src="../../resources/icons/download.png"></button>
+                    <button id="bndWnd_exptBndlBtn" class="btnClss" type="button" value="export"><img class="btnImg" src="../../resources/icons/upload.png"></button>
             </div>
             
         </div>
@@ -51,8 +51,8 @@
             <!--Query list-->
             <p>Queries in the selected bundle</p>
             <div>
-                    <select class="shwLst shwLst-qry" name="LstBndl" size = 5>
-                            <option value="Query1">TestQuery1</option>
+                    <select id="bndWnd_qryLst" class="shwLst shwLst-qry" name="LstBndl" size = 5>
+                            <option style="background-color:#000000; color: #FFFFFF;" value="Query1">TestQuery1</option>
                             <option value="Query2">TestQuery2</option>
                             <option value="Query3">TestQuery3</option>
                             <option value="Query4">TestQuery4</option>
@@ -60,12 +60,13 @@
                         </select>
             </div>
             <div class="bndlDiv">
-                    <button id="addQryBtn" class="btnClss" type="button" value="addQuery"><img class="btnImg" src="../../resources/icons/plus.png"></button>
-                    <button id="remQryBtn" class="btnClss" type="button" value="removeQuery"><img class="btnImg" src="../../resources/icons/minus.png"></button>
-                    <button id="mvUpBtn" class="btnClss" type="button" value="moveUp"><img class="btnImg" src="../../resources/icons/up-arrow.png"></button>
-                    <button id="mvDnBtn" class="btnClss" type="button" value="moveDown"><img class="btnImg" src="../../resources/icons/down-arrow.png"></button>
+                    <button id="bndWnd_addQryBtn" class="btnClss" type="button" value="addQuery"><img class="btnImg" src="../../resources/icons/plus.png"></button>
+                    <button id="bndWnd_remQryBtn" class="btnClss" type="button" value="removeQuery"><img class="btnImg" src="../../resources/icons/minus.png"></button>
+                    <button id="bndWnd_mvUpBtn" class="btnClss" type="button" value="moveUp"><img class="btnImg" src="../../resources/icons/up-arrow.png"></button>
+                    <button id="bndWnd_mvDnBtn" class="btnClss" type="button" value="moveDown"><img class="btnImg" src="../../resources/icons/down-arrow.png"></button>
             </div>
             
         </div>
     </body>
+    <script src = "../bundleWindow.js"></script>
 </html>

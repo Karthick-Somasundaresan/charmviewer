@@ -1,15 +1,37 @@
-const { app, BrowserWindow, Menu } = require('electron')
+const { app, BrowserWindow, Menu} = require('electron')
+const ipc = require('electron').ipcMain
 const actionHandler = require("./menuActionHandler")
-
+const appManager = require("./appManager")
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win
 
 
+function createBundleMenu(bundleList){
+    var bundleMenu = {
+        label: "Bundle",
+        submenu: [{
+            label: "OpenBundle... ",
+            accelerator: "CmdOrCtrl+B",
+            click: actionHandler.openBundleWindow
+        }]
+    }
+    sepObj = {type: "separator"}
+    bundleMenu.submenu.push(sepObj)
+    for (bundle in bundleList){
+        bundleObj = {}
+        bundleObj["label"] = bundleList[bundle];
+        bundleObj["type"] = "radio"
+        bundleObj["checked"] = false
+        bundleMenu.submenu.push(bundleObj)
+    }
+    return bundleMenu
+}
 
-function createApplicationMenu(){
+function createApplicationMenu(bundleList){
     console.log("Creating application Menu")
-    let template = [{
+    bundleMenu = createBundleMenu(bundleList)
+    fileMenu = {
         label: "File",
         submenu: [{
             label: "Open",
@@ -17,19 +39,14 @@ function createApplicationMenu(){
         },{
             label: "Close Window"
         }]
-    }, {
+    };
+    editMenu = {
         label: "Edit",
         submenu: [{
             label: "Find"
         }]
-    }, {
-        label: "Bundle",
-        submenu: [{
-            label: "OpenBundle... ",
-            accelerator: "CmdOrCtrl+B",
-            click: actionHandler.openBundleWindow
-        }]
-    }, {
+    };
+    viewMenu = {
         label: "view",
         submenu:[{
             label: "show line"
@@ -44,9 +61,12 @@ function createApplicationMenu(){
             type: 'checkbox',
             checked: true
         }]
-    }, {
+    };
+    aboutMenu = {
         label: "About"
-    }]
+    };
+    // let template = [ fileMenu, editMenu, bundleMenu, viewMenu, aboutMenu]
+    let template = [ fileMenu, editMenu, bundleMenu, viewMenu, aboutMenu]
     if (process.platform === 'darwin'){
         const appName = app.getName()
         template.unshift({
@@ -55,7 +75,9 @@ function createApplicationMenu(){
                 'label': 'preferences...',
                 'accelerator': "Command+,"
             }, {
-                label: "Quit " + appName
+                label: "Quit " + appName,
+                'accelerator':  "Command+Q",
+                'click': app.quit
             }]
                
         })
@@ -97,7 +119,12 @@ function createWindow () {
 // Some APIs can only be used after this event occurs.
 app.on('ready', function(){
     console.log("Application is ready!")
-    createApplicationMenu()
+    appManager.initializeBundles(app.getAppPath()+ "/../test/")
+    // appBundleHandler = new BundleHandler(app.getAppPath() + "/../test/")
+    // console.log("App Data path:", app.getAppPath())
+    // console.log("Bundle List: ", appBundleHandler.getAllBundleNames())
+    bundleList = appManager.getBundleHandler().getAllBundleNames()
+    createApplicationMenu(bundleList)
     createWindow()
 })
 
@@ -120,3 +147,6 @@ app.on('activate', () => {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
+ipc.on("Show-Bundle-Window", function(){
+    console.log("Received event 'shhow-bundle-window'")
+})
