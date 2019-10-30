@@ -157,6 +157,25 @@ ipc.on('Test-Msg', function(event,args){
     event.sender.send("Test-Msg-Reply", "aloooo")
 })
 
+ipc.on('Create-Bundle', function(event, bundleObj){
+    console.log("Received Create-Bundle Event with arg:", bundleObj)
+    appManager.getBundleHandler().createBundle(bundleObj.bundleName, bundleObj.queryList)
+    actionHandler.updateBundleWindow()
+    
+})
+
+ipc.on("All-Bundle-Request", function(event){
+    console.log("Received All-Bundle-Request in main.js")
+    bundleCollection = appManager.getBundleHandler().getAllBundles()
+    event.sender.send("All-Bundle-Response", bundleCollection)
+})
+
+ipc.on("Bundle-Obj-Request", function(event, selectedBundleName){
+    console.log("Received GetBundleInfo for bundle:", selectedBundleName)
+    bundleInfo = appManager.getBundleHandler().getBundle(selectedBundleName)
+    event.sender.send("Bundle-Obj-Response", bundleInfo)
+})
+
 ipc.on("Show-Bundle-Edit-Window", function(){
     console.log("Received Event Show-Bundle-Edit-Window")
     let modalPath = path.join("file://", __dirname, "./windows/updateBundleWindow.html")

@@ -46,15 +46,20 @@ function getRequiredInfo(selectedInfo = 0){
     console.log("Query List HTML: ", qryLstHtml)
 }
 
-bundleLstDisp.addEventListener('change', function(value){
-    let bundleHandler = appManager.getBundleHandler()
-    console.log("Changed Value: ", bundleLstDisp.value)
-    selectedBundle = bundleHandler.getBundle(bundleLstDisp.value)
+ipc.on('Bundle-Obj-Response', function(event, selectedBundle){
     console.log("Selected bundle: ", selectedBundle)
     console.log("Selected Bundle's Query list: ", selectedBundle.queryCollection)
     qryLstHtml = createQueryLstHTML(selectedBundle.queryCollection)
     queryLstDisp.innerHTML = qryLstHtml
     console.log("Query List HTML: ", qryLstHtml)
+
+})
+
+bundleLstDisp.addEventListener('change', function(value){
+    // let bundleHandler = appManager.getBundleHandler()
+    console.log("Changed Value: ", bundleLstDisp.value)
+    // selectedBundle = bundleHandler.getBundle(bundleLstDisp.value)
+    ipc.send('Bundle-Obj-Request', bundleLstDisp.value)
 })
 
 
@@ -95,9 +100,27 @@ exportBundle.addEventListener('click', function(event){
     console.log("Export button clicked: ", event)
 })
 
+
+ipc.on('All-Bundle-Response', function(event, bundleInfo){
+    console.log("Received Bundle Info: ", {bundleInfo})
+    bundleNameList = []
+    for (obj in bundleInfo){
+        bundleNameList.push(bundleInfo[obj].bundleName)
+    }
+    // bundleNameList = Object.keys(bundleInfo)
+    console.log(bundleNameList)
+    optLstHtml = createOptionHTML(bundleNameList, "opt")
+    bundleLstDisp.innerHTML = optLstHtml
+    selectedBundle = bundleInfo[0]
+    console.log("Selected Bundle's Query list: ", selectedBundle.queryCollection)
+    qryLstHtml = createQueryLstHTML(selectedBundle.queryCollection)
+    queryLstDisp.innerHTML = qryLstHtml
+    console.log("Query List HTML: ", qryLstHtml)
+})
 ipc.on('Show-Bundle-Window', function(){
     console.log("Received Shhow-Bundle-Window in BundleWindow.js")
-    getRequiredInfo()
+    // getRequiredInfo()
+    ipc.send("All-Bundle-Request")
 })
 
 ipc.on('Test-Msg-Reply', function(){

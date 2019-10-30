@@ -1,11 +1,12 @@
 const {BrowserWindow} = require('electron')
 const path = require('path')
 const ipc = require('electron').ipcMain
+let bundleWindow = null
 function openBundleWindow(item, focusedWindow){
     console.log("Received Item: ", {item})
     let modalPath = path.join("file://", __dirname, "./windows/bundleWindow.html")
     console.log("Modal PAth: ", modalPath)
-    let win = new BrowserWindow({width: 760, height: 280, 
+    bundleWindow = new BrowserWindow({width: 760, height: 280, 
         show: false,
         // backgroundColor: '#2e2c29',
         webPreferences: {
@@ -13,15 +14,15 @@ function openBundleWindow(item, focusedWindow){
           },
          resizable: false,
         maximizable: false})
-    win.webContents.openDevTools()
-    win.on('close', ()=>{win = null})
-    win.loadURL(modalPath)
-    win.on('ready-to-show', function(){
-        win.show()
-    })
-    win.on('did-finish-load', function(){
+    bundleWindow.webContents.openDevTools()
+    bundleWindow.on('close', ()=>{bundleWindow = null})
+    bundleWindow.loadURL(modalPath)
+    bundleWindow.on('ready-to-show', function(){
+    // })
+    // win.on('did-finish-load', function(){
         console.log("Emitting event Show-Bundle-Window")
-        win.webContents.send("Show-Bundle-Window")
+        bundleWindow.webContents.send("Show-Bundle-Window")
+        bundleWindow.show()
     })
 }
 
@@ -33,6 +34,12 @@ ipc.on('Test-Msg', function(event,args){
     console.log("Received test msg in menuActionHandler.js")
 })
 
+
+function updateBundleWindow(){
+    bundleWindow.webContents.send("Show-Bundle-Window")
+}
+
 module.exports = { 
-    openBundleWindow: openBundleWindow
+    openBundleWindow: openBundleWindow,
+    updateBundleWindow: updateBundleWindow
 }
