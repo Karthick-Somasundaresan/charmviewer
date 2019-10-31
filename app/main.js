@@ -176,6 +176,12 @@ ipc.on("Bundle-Obj-Request", function(event, selectedBundleName){
     event.sender.send("Bundle-Obj-Response", bundleInfo)
 })
 
+
+ipc.on('Delete-Bundle-Request', function(event, deleteBundleName){
+    appManager.getBundleHandler().deleteBundle(deleteBundleName)
+    actionHandler.updateBundleWindow()
+})
+
 ipc.on("Show-Bundle-Edit-Window", function(){
     console.log("Received Event Show-Bundle-Edit-Window")
     let modalPath = path.join("file://", __dirname, "./windows/updateBundleWindow.html")

@@ -87,7 +87,8 @@ addBundle.addEventListener('click', function(event){
 
 
 rmBundle.addEventListener('click', function(event){
-    console.log("Delete button clicked: ", event)
+    console.log("Delete button clicked: ", bundleLstDisp.value)
+    ipc.send('Delete-Bundle-Request', bundleLstDisp.value)
 })
 
 
