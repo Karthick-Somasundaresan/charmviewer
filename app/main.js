@@ -3,6 +3,8 @@ const ipc = require('electron').ipcMain
 const actionHandler = require("./menuActionHandler")
 const appManager = require("./appManager")
 const path = require('path')
+const fs = require('fs')
+const dialog = require('electron').dialog
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win
@@ -200,5 +202,28 @@ ipc.on("Show-Bundle-Edit-Window", function(){
     win.webContents.on('did-finish-load',function(){
         console.log("Emitting event Show-Bundle-Edit-Window")
         win.webContents.send("Show-Bundle-Edit-Window", appManager.getBundleHandler())
+    })
+})
+
+
+ipc.on('Import-Bundle-File', function(event, fileName){
+    let rawBundle = fs.readFileSync(fileName[0])
+    let bundleJson = undefined
+    try {
+        bundleJson = JSON.parse(rawBundle)
+        appManager.getBundleHandler().importBundle(bundleJson)
+        actionHandler.updateBundleWindow()
+    } catch (error) {
+        dialog.showErrorBox("Unable to open file", "Unable to open file:" + fileName)
+    }
+})
+
+ipc.on("Export-Bundle-File", function(event, exportObj){
+    exportBundleJson = appManager.getBundleHandler().exportBundle(exportObj["bundleToExport"])
+    console.log("Exporting Bundle: ", exportBundleJson, " to file: ", exportObj["fileName"])
+    fs.writeFile(exportObj["fileName"], JSON.stringify(exportBundleJson), function(err){
+        if (err){
+            dialog.showErrorBox("Unable to save file", "Unable to save file: " + exportObj[fileName])
+        }
     })
 })

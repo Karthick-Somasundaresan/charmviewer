@@ -39,7 +39,12 @@ function updateBundleWindow(){
     bundleWindow.webContents.send("Show-Bundle-Window")
 }
 
+function postman(eventName, args) {
+    bundleWindow.webContents.send(eventName, args)
+}
+
 module.exports = { 
     openBundleWindow: openBundleWindow,
-    updateBundleWindow: updateBundleWindow
+    updateBundleWindow: updateBundleWindow,
+    postman: postman
 }

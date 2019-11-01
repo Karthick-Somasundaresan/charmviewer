@@ -3,6 +3,7 @@ const appManager = require('../appManager')
 const path = require('path')
 const ipc = electron.ipcRenderer
 const app = electron.remote.app
+const dialog = electron.remote.dialog
 const BrowserWindow = electron.remote.BrowserWindow
 
 const bundleLstDisp = document.getElementById('bndWnd_bndlLst')
@@ -94,11 +95,20 @@ rmBundle.addEventListener('click', function(event){
 
 importBundle.addEventListener('click', function(event){
     console.log("Import button clicked: ", event)
+    dialog.showOpenDialog({properties:["openFile"]},function(fileName){
+        console.log("Import bundle from file: ", fileName);
+        ipc.send("Import-Bundle-File", fileName)
+    })
 })
 
 
 exportBundle.addEventListener('click', function(event){
     console.log("Export button clicked: ", event)
+    dialog.showSaveDialog({"buttonLabel": "Export"}, function(fileName){
+        bundleToExport = bundleLstDisp.value
+        console.log("fileName: ", fileName, " Bundle: ", bundleToExport)
+        ipc.send("Export-Bundle-File", {"fileName": fileName, "bundleToExport": bundleToExport})
+    })
 })
 
 
