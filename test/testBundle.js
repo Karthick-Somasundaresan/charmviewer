@@ -6,6 +6,7 @@ var readlineEmitter = new EventEmitter()
 
 
 let myBundle = new Bundle("TestBundle1")
+myBundle.addQuery('(("Incident01" AND "with Scenario02") AND "when Scenario03")', "GREEN")
 myBundle.addQuery("((Incident01 AND Scenario03) AND Scenario02)", "Blue")
 // myBundle.addQuery("((Incident02 AND Scenario03) OR Stopped)", "RED")
 // myBundle.addQuery("((Stopped AND Scenario03) OR Incident03)", "GREEN")
@@ -19,13 +20,14 @@ Object.keys(queryObj).forEach(element => {
     console.log(queryObj[element].query)
 });
 console.log("Moving Up")
-myBundle.swapPriority(3, "Up")
+myBundle.swapPriority(4, "Up")
 queryObj = myBundle.getQueryList()
 Object.keys(queryObj).forEach(element => {
     console.log(queryObj[element].query)
 });
 console.log("Moving Up")
-myBundle.swapPriority(2, "Up")
+myBundle.deleteQuery(2)
+myBundle.swapPriority(3, "Up")
 queryObj = myBundle.getQueryList()
 Object.keys(queryObj).forEach(element => {
     console.log(queryObj[element].query)

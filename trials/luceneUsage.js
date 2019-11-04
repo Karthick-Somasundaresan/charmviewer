@@ -17,7 +17,7 @@ async.whilst(
                         callback(null, quitLoop)
                     } else {
                         let res = lucene.parse(answer)
-                        // console.log(JSON.stringify(res))
+                        console.log(JSON.stringify(res))
                         callback(null, quitLoop)
                     }
                 })
