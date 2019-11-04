@@ -12,6 +12,8 @@ const addBundle = document.getElementById('bndWnd_addBndlBtn')
 const rmBundle = document.getElementById('bndWnd_rmBndlBtn')
 const importBundle = document.getElementById('bndWnd_imprtBndlBtn')
 const exportBundle = document.getElementById('bndWnd_exptBndlBtn')
+const moveUpQuery = document.getElementById('bndWnd_mvUpBtn')
+const moveDnQuery = document.getElementById('bndWnd_mvDnBtn')
 
 function createOptionHTML(listOfOptions, cssclass){
     var optionHTML = ""
@@ -25,7 +27,7 @@ function createQueryLstHTML(queryCollection){
     queryLst = Object.keys(queryCollection)
     var optionHTML = ""
     for(query in queryCollection){
-        optionHTML = optionHTML + '<option style="background-color:' + queryCollection[query]["color"]["bgColor"]+ '; color:' + queryCollection[query]["color"]["fgColor"] + '" value="'+ queryCollection[query]["query"] +'">'+ queryCollection[query]["query"]+ '</option>'
+        optionHTML = optionHTML + '<option id='+ queryCollection[query]["qid"] +' style="background-color:' + queryCollection[query]["color"]["bgColor"]+ '; color:' + queryCollection[query]["color"]["fgColor"] + '" value="'+ queryCollection[query]["query"] +'">'+ queryCollection[query]["query"]+ '</option>'
     }
     return optionHTML
 }
@@ -111,6 +113,38 @@ exportBundle.addEventListener('click', function(event){
     })
 })
 
+function changePriority(event){
+    
+    bundleName = ""
+    console.log(event.path[1].id)
+    if(bundleLstDisp.value === undefined || bundleLstDisp.value === null || bundleLstDisp.value === ""){
+        bundleName = bundleLstDisp[0].value
+    } else {
+        bundleName = bundleLstDisp.value
+    }
+    // console.log("BundleName: ", bundleName, " Query: ", queryLstDisp[queryLstDisp.selectedIndex].id)
+    if(queryLstDisp.selectedIndex != -1){
+        obj={}
+        obj["bundlename"] = bundleName
+        obj["qid"] = queryLstDisp[queryLstDisp.selectedIndex].id
+        if (event.path[1].id === "bndWnd_mvUpBtn"){
+            obj["direction"] = "Up"
+        } else {
+            obj["direction"] = "Down"
+        }
+        ipc.send("Query-Priority-Change", obj)
+    } else {
+        dialog.showErrorBox("Select Error", "Select a query to change priority!")
+    }
+    
+}
+moveUpQuery.addEventListener('click', changePriority)
+
+moveDnQuery.addEventListener('click', changePriority)
+// moveDnQuery.addEventListener('click', function(event){
+//     console.log("BundleName: ", bundleLstDisp.value, " Query: ", queryLstDisp.value)
+//     console.log("BundleName: ", bundleLstDisp.value, " Query: ", queryLstDisp[queryLstDisp.selectedIndex].id)
+// })
 
 ipc.on('All-Bundle-Response', function(event, bundleInfo){
     console.log("Received Bundle Info: ", {bundleInfo})

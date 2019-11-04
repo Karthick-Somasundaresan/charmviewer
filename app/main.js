@@ -218,6 +218,14 @@ ipc.on('Import-Bundle-File', function(event, fileName){
     }
 })
 
+ipc.on("Query-Priority-Change", function(event, changeObj){
+    appManager.getBundleHandler().changePriority(changeObj["bundlename"], changeObj["qid"], changeObj["direction"])
+    // actionHandler.updateBundleWindow()
+    bundleInfo = appManager.getBundleHandler().getBundle(changeObj["bundlename"])
+    event.sender.send("Bundle-Obj-Response", bundleInfo)
+    
+})
+
 ipc.on("Export-Bundle-File", function(event, exportObj){
     exportBundleJson = appManager.getBundleHandler().exportBundle(exportObj["bundleToExport"])
     console.log("Exporting Bundle: ", exportBundleJson, " to file: ", exportObj["fileName"])
