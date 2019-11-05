@@ -65,6 +65,11 @@ bundleLstDisp.addEventListener('change', function(value){
     ipc.send('Bundle-Obj-Request', bundleLstDisp.value)
 })
 
+bundleLstDisp.addEventListener('dblclick', function(event){
+    console.log("Double Clicked on bundle: ", bundleLstDisp.value)
+    ipc.send('Show-Bundle-Edit-Window', bundleLstDisp.value)
+})
+
 
 addBundle.addEventListener('click', function(event){
     console.log("Add button clicked: ", event)

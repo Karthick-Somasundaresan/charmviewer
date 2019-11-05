@@ -1,5 +1,4 @@
 const electron = require('electron')
-const appManager = require('../appManager')
 const path = require('path')
 const ipc = electron.ipcRenderer
 const app = electron.remote.app
@@ -12,6 +11,7 @@ const fgColor = document.getElementById("clrFg")
 const bgColor = document.getElementById("clrBg")
 const queryTable = document.getElementById("tblQryLst")
 const saveBtn = document.getElementById("updtBndlWn_save")
+const cancelBtn = document.getElementById("updtBndlWn_cancel")
 const bndlEnbl = document.getElementById("bndlEnable")
 const bndlName = document.getElementById("txtBndlName")
 // const styleTag = document.getElementById("updtBndlWnd_styl")
@@ -62,6 +62,10 @@ function convertRGBtoHEX(rgbStr) {
     return "#" + red + green + blue
 }
 
+cancelBtn.addEventListener('click', function(){
+    // ipc.send('close-update-bundle-window')
+    window.close()
+})
 saveBtn.addEventListener('click', function(){
     let bundleName = txtBndlName.value
     let rowCnt = queryTable.getElementsByTagName("tr").length
@@ -96,6 +100,16 @@ saveBtn.addEventListener('click', function(){
     window.close()
 })
 
+function updatePageElements(bundleObj){
+    bndlName.value = bundleObj.bundleName
+    for(queryObj in bundleObj.queryCollection){
+        addToQueryTable(bundleObj.queryCollection[queryObj].query, bundleObj.queryCollection[queryObj].color.fgColor,  bundleObj.queryCollection[queryObj].color.bgColor)
+    }
+}
+
 ipc.on('Show-Bundle-Edit-Window', function(event, args){
-    console.log("Received Shhow-Bundle-Edit-Window in updateBundleWindow.js", args)
+    console.log("Received Show-Bundle-Edit-Window in updateBundleWindow.js", event, args)
+    if (args !== undefined && args !== null){
+        updatePageElements(args)
+    }
 })

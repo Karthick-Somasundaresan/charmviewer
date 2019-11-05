@@ -184,7 +184,7 @@ ipc.on('Delete-Bundle-Request', function(event, deleteBundleName){
     actionHandler.updateBundleWindow()
 })
 
-ipc.on("Show-Bundle-Edit-Window", function(){
+ipc.on("Show-Bundle-Edit-Window", function(event, bundleName){
     console.log("Received Event Show-Bundle-Edit-Window")
     let modalPath = path.join("file://", __dirname, "./windows/updateBundleWindow.html")
     win = new BrowserWindow({height:280, width:760,webPreferences: {
@@ -199,10 +199,15 @@ ipc.on("Show-Bundle-Edit-Window", function(){
         console.log(" UpdateBundleWindow ready to show")
         win.show()
     })
-    win.webContents.on('did-finish-load',function(){
-        console.log("Emitting event Show-Bundle-Edit-Window")
-        win.webContents.send("Show-Bundle-Edit-Window", appManager.getBundleHandler())
-    })
+    if(bundleName !== undefined && bundleName !== null ){
+
+        win.webContents.on('did-finish-load',function(){
+            console.log("Emitting event Show-Bundle-Edit-Window for bundle: ", bundleName)
+            bundleObj = appManager.getBundleHandler().getBundle(bundleName)
+            console.log("Emitting obj: ", {bundleObj})
+            win.webContents.send("Show-Bundle-Edit-Window", bundleObj)
+        })
+    }
 })
 
 
