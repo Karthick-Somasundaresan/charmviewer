@@ -38,7 +38,8 @@ function createApplicationMenu(bundleList){
         label: "File",
         submenu: [{
             label: "Open",
-            'accelerator': "Command + o"
+            'accelerator': "Command + o",
+            'click': actionHandler.loadFile
         },{
             label: "Close Window"
         }]
@@ -103,10 +104,10 @@ function createWindow () {
   })
 
   // and load the index.html of the app.
-  win.loadFile('windows/index.html')
+  win.loadFile('windows/fileViewWindow.html')
 
   // Open the DevTools.
-//   win.webContents.openDevTools()
+  win.webContents.openDevTools()
 
   // Emitted when the window is closed.
   win.on('closed', () => {

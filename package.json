@@ -11,7 +11,8 @@
     "util": "^0.12.1"
   },
   "devDependencies": {
-    "electron": "^6.0.12"
+    "electron": "^6.0.12",
+    "monaco-editor": "^0.18.1"
   },
   "scripts": {
     "test": "node queryResolver.js",

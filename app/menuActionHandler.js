@@ -1,6 +1,7 @@
 const {BrowserWindow} = require('electron')
 const path = require('path')
 const ipc = require('electron').ipcMain
+const dialog = require('electron').dialog
 let bundleWindow = null
 function openBundleWindow(item, focusedWindow){
     console.log("Received Item: ", {item})
@@ -43,8 +44,17 @@ function postman(eventName, args) {
     bundleWindow.webContents.send(eventName, args)
 }
 
+function loadFile(item, focusedWindow){
+    dialog.showOpenDialog({properties:["openFile"]}, function(filename){
+        console.log("Trying to open: ", filename)
+        focusedWindow.webContents.send("File-To-Load", filename[0])
+    })
+}
+
 module.exports = { 
     openBundleWindow: openBundleWindow,
     updateBundleWindow: updateBundleWindow,
-    postman: postman
+    postman: postman,
+    loadFile: loadFile
+
 }
