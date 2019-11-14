@@ -28,7 +28,8 @@ function updateLogViewWindow(content) {
     amdRequire(['vs/editor/editor.main'], function() {
 		console.log("About to create an editor")
 		var editor = monaco.editor.create(document.getElementById('container'), {
-			value: content.join('\n'),
+            value: content.join('\n'),
+            automaticLayout: true
 		});
 	}, function(arg){
         console.log("Error in display: ", arg)
