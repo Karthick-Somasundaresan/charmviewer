@@ -2,6 +2,7 @@ const {BrowserWindow} = require('electron')
 const path = require('path')
 const ipc = require('electron').ipcMain
 const dialog = require('electron').dialog
+const fileOperation = require('../lib/FileOperations')
 let bundleWindow = null
 function openBundleWindow(item, focusedWindow){
     console.log("Received Item: ", {item})
@@ -47,13 +48,28 @@ function postman(eventName, args) {
 function loadFile(item, focusedWindow){
     dialog.showOpenDialog({properties:["openFile"]}, function(filename){
         console.log("Trying to open: ", filename)
-        focusedWindow.webContents.send("File-To-Load", filename[0])
+        // focusedWindow.webContents.send("File-To-Load", filename[0])
+        fileOperation.openFileOperation(filename[0], focusedWindow)
     })
+}
+
+fileOperation.fileEvents.on('read-complete', function(window, filename){
+    console.log("File read completely")
+    contents = fileOperation.getFileContents(filename)
+    window.webContents.send("Display-File", contents)
+
+})
+function selectBundle(menuItem, window, event) {
+    console.log("Received MenuItem:", {menuItem})
+    console.log("Received Event: ", {event})
+    // ipc.send("Enable-Bundle", menuItem.label)
+    window.webContents.send("Bundle-Change-Event", menuItem.label)
 }
 
 module.exports = { 
     openBundleWindow: openBundleWindow,
     updateBundleWindow: updateBundleWindow,
+    selectBundle: selectBundle,
     postman: postman,
     loadFile: loadFile
 

@@ -1,5 +1,4 @@
 const ipc = require('electron').ipcRenderer
-const fileOp = require("../../lib/FileOperations")
 const amdLoader = require('../../node_modules/monaco-editor/min/vs/loader.js');
 const path = require('path')
 const amdRequire = amdLoader.require;
@@ -19,9 +18,13 @@ amdRequire.config({
 	baseUrl: uriFromPath(path.join(__dirname, '../../node_modules/monaco-editor/min'))
 });
 
-ipc.on('File-To-Load', function(event, fileName){
-    console.log("Received file name to open: ", fileName)
-    fileOp.openFileOperation(fileName)
+ipc.on('Display-File', function(event, contents){
+    console.log("Received file contents:");
+    updateLogViewWindow(contents)
+})
+
+ipc.on("File-Content-Response", function(content){
+    updateLogViewWindow(content)
 })
 
 function updateLogViewWindow(content) {
@@ -36,15 +39,3 @@ function updateLogViewWindow(content) {
     });
 
 }
-
-
-var content = []
-fileOp.fileEvents.on("read-line", function(line){
-    content.push(line)
-})
-
-fileOp.fileEvents.on("read-complete", function(){
-    console.log("Completed reading file!! Time to load!!!")
-    updateLogViewWindow(content)
-
-})

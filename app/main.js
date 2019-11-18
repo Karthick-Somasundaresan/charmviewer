@@ -26,9 +26,17 @@ function createBundleMenu(bundleList){
         bundleObj["label"] = bundleList[bundle];
         bundleObj["type"] = "radio"
         bundleObj["checked"] = false
+        bundleObj["click"] = enableBundle
+        // bundleObj["click"] = actionHandler.selectBundle
         bundleMenu.submenu.push(bundleObj)
     }
     return bundleMenu
+}
+
+function enableBundle(menuItem, window, event){
+    appManager.getBundleHandler().enableBundle(menuItem.label)
+    window.webContents.send("Bundle-Change-Event", menuItem.label)
+
 }
 
 function createApplicationMenu(bundleList){
@@ -240,4 +248,15 @@ ipc.on("Export-Bundle-File", function(event, exportObj){
             dialog.showErrorBox("Unable to save file", "Unable to save file: " + exportObj[fileName])
         }
     })
+})
+
+ipc.on("Get-Enabled-Bundle", function(event){
+    console.log("Received Enabled Bundled request")
+    let bundleName = appManager.getBundleHandler().getEnabledBundleName()
+    let bundleObj = appManager.getBundleHandler().getBundle(bundleName)
+    event.sender.send("Get-Enabled-Bundle-Response", bundleObj)
+})
+
+ipc.on('Enable-Bundle', function(event, bundleName){
+    appManager.getBundleHandler().enableBundle(bundleName, true)
 })
