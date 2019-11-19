@@ -66,11 +66,22 @@ function selectBundle(menuItem, window, event) {
     window.webContents.send("Bundle-Change-Event", menuItem.label)
 }
 
+function filterFileWithBundle (bundleObj, callback){
+    console.log("Inside Menu-Action-Handler: ", {bundleObj})
+    console.log("Received bundleObj query count in menuActionHandler: ", bundleObj.getQueryListSize())
+    dummyResponse = []
+    dummyResponse.push("This is a simple response\n") 
+    dummyResponse.push("This is not a real response\n")
+    dummyResponse.push("This is to test if filtered output is working or not\n")
+    callback(dummyResponse)
+}
+
 module.exports = { 
     openBundleWindow: openBundleWindow,
     updateBundleWindow: updateBundleWindow,
     selectBundle: selectBundle,
     postman: postman,
+    filterFileWithBundle, filterFileWithBundle,
     loadFile: loadFile
 
 }

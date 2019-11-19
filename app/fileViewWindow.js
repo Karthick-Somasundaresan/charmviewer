@@ -20,22 +20,27 @@ amdRequire.config({
 
 ipc.on('Display-File', function(event, contents){
     console.log("Received file contents:");
-    updateLogViewWindow(contents)
+    updateLogViewWindow(contents, "container")
 })
 
 ipc.on("File-Content-Response", function(content){
-    updateLogViewWindow(content)
+    updateLogViewWindow(content, "container")
 })
 
-function updateLogViewWindow(content) {
+ipc.on("Filtered-Output", function(event, filteredContent){
+    console.log("Received filtered output", filteredContent)
+    updateLogViewWindow(filteredContent,"filter-container")
+})
+
+function updateLogViewWindow(content, containerId) {
     amdRequire(['vs/editor/editor.main'], function() {
-		console.log("About to create an editor")
-		var editor = monaco.editor.create(document.getElementById('container'), {
+		console.log("About to create an editor", typeof(content))
+		var editor = monaco.editor.create(document.getElementById(containerId), {
             value: content.join('\n'),
-            automaticLayout: true
+            automaticLayout: true,
+            readOnly: true
 		});
 	}, function(arg){
         console.log("Error in display: ", arg)
     });
-
 }

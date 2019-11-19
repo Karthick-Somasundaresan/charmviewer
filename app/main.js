@@ -35,8 +35,14 @@ function createBundleMenu(bundleList){
 
 function enableBundle(menuItem, window, event){
     appManager.getBundleHandler().enableBundle(menuItem.label)
-    window.webContents.send("Bundle-Change-Event", menuItem.label)
-
+    // window.webContents.send("Bundle-Change-Event", menuItem.label)
+    bundleObj = appManager.getBundleHandler().getBundle(menuItem.label)
+    console.log("Received bundleObj query count in main: ", bundleObj.getQueryListSize())
+    console.log("Received bundleObj in main: ", {bundleObj})
+    actionHandler.filterFileWithBundle(bundleObj, function(filteredContents){
+        console.log("Inside callback!!!", filteredContents)
+        window.webContents.send("Filtered-Output", filteredContents)
+    })
 }
 
 function createApplicationMenu(bundleList){
