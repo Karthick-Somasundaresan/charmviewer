@@ -1,4 +1,5 @@
 const {BrowserWindow} = require('electron')
+const _ = require('lodash')
 const path = require('path')
 const ipc = require('electron').ipcMain
 const dialog = require('electron').dialog
@@ -56,6 +57,7 @@ function loadFile(item, focusedWindow){
 fileOperation.fileEvents.on('read-complete', function(window, filename){
     console.log("File read completely")
     contents = fileOperation.getFileContents(filename)
+    window["filename"] = filename
     window.webContents.send("Display-File", contents)
 
 })
@@ -66,14 +68,17 @@ function selectBundle(menuItem, window, event) {
     window.webContents.send("Bundle-Change-Event", menuItem.label)
 }
 
-function filterFileWithBundle (bundleObj, callback){
+function filterFileWithBundle (filename, bundleObj, callback){
     console.log("Inside Menu-Action-Handler: ", {bundleObj})
     console.log("Received bundleObj query count in menuActionHandler: ", bundleObj.getQueryListSize())
-    dummyResponse = []
-    dummyResponse.push("This is a simple response\n") 
-    dummyResponse.push("This is not a real response\n")
-    dummyResponse.push("This is to test if filtered output is working or not\n")
-    callback(dummyResponse)
+    // dummyResponse = []
+    // dummyResponse.push("This is a simple response\n") 
+    // dummyResponse.push("This is not a real response\n")
+    // dummyResponse.push("This is to test if filtered output is working or not\n")
+    fileOperation.filterFileContents(filename, bundleObj,function(filterContents){
+
+        callback({"logs": _.map(filterContents,'log'), "lines": _.map(filterContents, "userdata")})
+    })
 }
 
 module.exports = { 
