@@ -58,7 +58,7 @@ fileOperation.fileEvents.on('read-complete', function(window, filename){
     console.log("File read completely")
     contents = fileOperation.getFileContents(filename)
     window["filename"] = filename
-    window.webContents.send("Display-File", contents)
+    window.webContents.send("Display-File", {"logs": contents})
 
 })
 function selectBundle(menuItem, window, event) {
@@ -77,7 +77,7 @@ function filterFileWithBundle (filename, bundleObj, callback){
     // dummyResponse.push("This is to test if filtered output is working or not\n")
     fileOperation.filterFileContents(filename, bundleObj,function(filterContents){
 
-        callback({"logs": _.map(filterContents,'log'), "lines": _.map(filterContents, "userdata")})
+        callback({"logs": _.map(filterContents,'log'), "lines": _.map(filterContents, "userdata"), "rules": _.map(filterContents, "matchedQid")})
     })
 }
 

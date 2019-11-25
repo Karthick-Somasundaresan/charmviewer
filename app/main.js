@@ -107,20 +107,39 @@ function createApplicationMenu(bundleList){
     Menu.setApplicationMenu(menu)
 }
 
-function createWindow () {
+function convertBundlesToCSS(allBundles) {
+    let cssText = ""
+    console.log(JSON.stringify(allBundles))
+    allBundles.forEach(bundle => {
+        let bundleName = bundle.bundleName
+        for (const item in bundle.queryCollection) {
+            if (bundle.queryCollection.hasOwnProperty(item)) {
+                const element = bundle.queryCollection[item];
+                // console.log(element)
+                let qid = element.qid
+                cssText += "." + bundleName + "_" + qid + " {" + "color:" + element.color.fgColor + " !important; background:" +element.color.bgColor + "}\n"
+            }
+        }
+    }); 
+    return cssText
+}
+
+function createWindow (allBundles) {
   // Create the browser window.
   console.log("Creating Application Window")
+  textCss = convertBundlesToCSS(allBundles)
   win = new BrowserWindow({
     width: 800,
     height: 600,
     webPreferences: {
       nodeIntegration: true
-    }
+    },
+    paintWhenInitiallyHidden: true
   })
 
   // and load the index.html of the app.
-  win.loadFile('windows/fileViewWindow.html')
 
+  win.loadFile('windows/fileViewWindow.html')
   // Open the DevTools.
   win.webContents.openDevTools()
 
@@ -130,6 +149,10 @@ function createWindow () {
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
     win = null
+  })
+  win.webContents.on('did-finish-load', function(){
+      console.log("Ready to show page: ", textCss)
+    win.webContents.send("update-css-styles", textCss)
   })
 }
 
@@ -142,9 +165,10 @@ app.on('ready', function(){
     // appBundleHandler = new BundleHandler(app.getAppPath() + "/../test/")
     // console.log("App Data path:", app.getAppPath())
     // console.log("Bundle List: ", appBundleHandler.getAllBundleNames())
-    bundleList = appManager.getBundleHandler().getAllBundleNames()
+    let bundleList = appManager.getBundleHandler().getAllBundleNames()
+    let allBundles = appManager.getBundleHandler().getAllBundles()
     createApplicationMenu(bundleList)
-    createWindow()
+    createWindow(allBundles)
 })
 
 // Quit when all windows are closed.

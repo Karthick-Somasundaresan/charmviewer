@@ -22,6 +22,7 @@ amdRequire.config({
 ipc.on('Display-File', function(event, contents){
     console.log("Received file contents:");
     updateLogViewWindow(contents, "container")
+    contents = null
 })
 
 ipc.on("File-Content-Response", function(content){
@@ -39,26 +40,73 @@ ipc.on("Filtered-Output", function(event, filteredContent){
     console.log("Received filtered output", filteredContent)
     linemap = filteredContent.lines
     linemap.unshift(0)
-    updateLogViewWindow(filteredContent.logs,"filter-container")
+    updateLogViewWindow(filteredContent,"filter-container")
 })
+
+function updateLogDecorations(viewEditor, line, cssRule) {
+    for (let index = 0; index < cssRule.length; index++) {
+        const element = cssRule[index];
+        if (viewEditor === filtEditor){
+            viewEditor.deltaDecorations([], [{
+                range: new monaco.Range(index + 1, 1, index + 1, 1),
+                options: {
+                    isWholeLine: true,
+                    inlineClassName: element
+                }
+            }])
+        } else {
+            viewEditor.deltaDecorations([], [{
+                range: new monaco.Range(line[index + 1], 1, line[index + 1], 1),
+                options: {
+                    isWholeLine: true,
+                    inlineClassName: element
+                }
+            }])
+        }
+         
+    }
+} 
 
 function updateLogViewWindow(content, containerId) {
     amdRequire(['vs/editor/editor.main'], function() {
+
+        
         console.log("About to create an editor", typeof(content))
         if (containerId === "container"){
+            
             editor = monaco.editor.create(document.getElementById(containerId), {
-                value: content.join('\n'),
+                value: content.logs.join('\n'),
                 automaticLayout: true,
                 readOnly: true
             });
             // addMouseListenerForEditor(editor)
         } else {
             filtEditor = monaco.editor.create(document.getElementById(containerId), {
-                value: content.join('\n'),
+                value: content.logs.join('\n'),
                 automaticLayout: true,
                 lineNumbers: mapLineNumbers,
                 readOnly: true
             })
+            updateLogDecorations(filtEditor, content.lines, content.rules)
+            updateLogDecorations(editor, content.lines, content.rules)
+            // filtEditor.deltaDecorations([],[
+            //     {
+            //         range: new monaco.Range(2,1,2,1),
+            //         options: {
+            //             isWholeLine: true, 
+            //             className: "trialCSS"
+            //         }
+            //     }
+            // ])
+            // filtEditor.deltaDecorations([],[
+            //     {
+            //         range: new monaco.Range(1,1,1,1),
+            //         options: {
+            //             isWholeLine: true, 
+            //             className: "testCSS"
+            //         }
+            //     }
+            // ])
             filtEditor.onMouseDown(filterEditerMouseDown)
 
         }
@@ -77,7 +125,34 @@ function filterEditerMouseDown(event) {
         console.log("Mapped line in the main editor: ", mappedLine)
         if(editor !== null && editor !== undefined) {
             editor.revealLine(mappedLine)
+            // editor.deltaDecorations([],[
+            //     {
+            //         range: new monaco.Range(3,1,3,1),
+            //         options: {
+            //             isWholeLine: true, 
+            //             className: "testCSS"
+            //         }
+            //     }
+            // ])
+            // editor.deltaDecorations([],[
+            //     {
+            //         range: new monaco.Range(2,1,2,1),
+            //         options: {
+            //             isWholeLine: true, 
+            //             className: "trialCSS"
+            //         }
+            //     }
+            // ])
             editor.focus()
         }
 }
 
+ipc.on('update-css-styles', function(event, cssText){
+    style = document.getElementById('viewer-css')
+    console.log("style: ", style)
+    style = document.createElement("style")
+    style.setAttribute("id", "viewer-css")
+    style.innerHTML = cssText
+    style.setAttribute('type', 'text/css')
+    document.body.appendChild(style)
+})
