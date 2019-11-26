@@ -74,19 +74,28 @@ function updateLogViewWindow(content, containerId) {
         console.log("About to create an editor", typeof(content))
         if (containerId === "container"){
             
-            editor = monaco.editor.create(document.getElementById(containerId), {
-                value: content.logs.join('\n'),
-                automaticLayout: true,
-                readOnly: true
-            });
+            if (editor === null) {
+                editor = monaco.editor.create(document.getElementById(containerId), {
+                    value: content.logs.join('\n'),
+                    automaticLayout: true,
+                    readOnly: true
+                });
+            } else {
+                editor.setValue(content.logs.join('\n'))
+            }
             // addMouseListenerForEditor(editor)
         } else {
-            filtEditor = monaco.editor.create(document.getElementById(containerId), {
-                value: content.logs.join('\n'),
-                automaticLayout: true,
-                lineNumbers: mapLineNumbers,
-                readOnly: true
-            })
+            if (filtEditor === null ){
+                filtEditor = monaco.editor.create(document.getElementById(containerId), {
+                    value: content.logs.join('\n'),
+                    automaticLayout: true,
+                    lineNumbers: mapLineNumbers,
+                    readOnly: true
+                })
+            } else {
+                filtEditor.setValue(content.logs.join('\n'))
+            }
+            
             updateLogDecorations(filtEditor, content.lines, content.rules)
             updateLogDecorations(editor, content.lines, content.rules)
             // filtEditor.deltaDecorations([],[
