@@ -81,12 +81,24 @@ function filterFileWithBundle (filename, bundleObj, callback){
     })
 }
 
+function increaseFontSize(item, focusedWindow){
+    console.log("Increase Font size")
+    focusedWindow.webContents.send("Increase-Font-Size")
+}
+
+function reduceFontSize(item, focusedWindow) {
+    console.log("Decrease font size")
+    focusedWindow.webContents.send("Decrease-Font-Size")
+}
+
 module.exports = { 
     openBundleWindow: openBundleWindow,
     updateBundleWindow: updateBundleWindow,
     selectBundle: selectBundle,
     postman: postman,
     filterFileWithBundle, filterFileWithBundle,
+    increaseFontSize, increaseFontSize,
+    reduceFontSize, reduceFontSize,
     loadFile: loadFile
 
 }

@@ -53,7 +53,7 @@ function createApplicationMenu(bundleList){
         label: "File",
         submenu: [{
             label: "Open",
-            'accelerator': "Command + o",
+            'accelerator': "CmdOrCtrl + o",
             'click': actionHandler.loadFile
         },{
             label: "Close Window"
@@ -69,6 +69,14 @@ function createApplicationMenu(bundleList){
         label: "view",
         submenu:[{
             label: "show line"
+        }, {
+            label: "Increase Font Size",
+            'accelerator': "CmdOrCtrl + =",
+            'click': actionHandler.increaseFontSize
+        }, {
+            label: "Decreaae Font Size",
+            'accelerator': "CmdOrCtrl + -",
+            'click': actionHandler.reduceFontSize
         }, {
             type: "separator"
         }, {
