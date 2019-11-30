@@ -15,7 +15,36 @@ function uriFromPath(_path) {
 	return encodeURI('file://' + pathName);
 }
 
+var isResizing = false;
+var last_mouse_pos;
+dragDiv = document.getElementById("drag")
+dragDiv.addEventListener("mousedown", function(event){
+    isResizing = true
+    last_mouse_pos = event.y
+    console.log("Started resizing")
+})
+document.addEventListener('mousemove', function(e){
+    if (isResizing) {
+        container = document.getElementById("container")
+        bigContainer = document.getElementById("big-container")
+        filtContainer = document.getElementById("filter-container")
+        // console.log("Computed height: ", parseInt(getComputedStyle(container, '').height))
+        // console.log(event.clientY)
+        delta = last_mouse_pos - event.clientY
+        last_mouse_pos = event.clientY
 
+        // console.log(delta)
+        container.style.height = parseInt(getComputedStyle(container, "").height) - delta + "px"
+        // console.log("mod height: ", container.style.height)
+        filtContainer.style.height = parseInt(getComputedStyle(filtContainer,"").height) + delta + "px"
+        // console.log(event.clientX)
+    }
+})
+document.addEventListener('mouseup', function(e){
+    isResizing = false
+    console.log("Done resizing")
+
+})
 amdRequire.config({
 	baseUrl: uriFromPath(path.join(__dirname, '../../node_modules/monaco-editor/min'))
 });
