@@ -3,6 +3,7 @@ const amdLoader = require('../../node_modules/monaco-editor/min/vs/loader.js');
 const path = require('path')
 const amdRequire = amdLoader.require;
 const amdDefine = amdLoader.require.define
+const btnRunInstQury = document.getElementById('btnRunInstQury')
 var editor = null
 var filtEditor = null
 const fontSizeArray = [8, 10, 12, 14, 16, 18, 20, 24, 28, 32]
@@ -22,6 +23,15 @@ dragDiv.addEventListener("mousedown", function(event){
     isResizing = true
     last_mouse_pos = event.y
     console.log("Started resizing")
+})
+btnRunInstQury.addEventListener('click', function(e){
+    console.log("Instantly filtering logs")
+    let instaQueryTxt = document.getElementById('txtInstQryArea')
+    let clrInstBg = document.getElementById('clrInstBg')
+    let clrInstFg = document.getElementById('clrInstFg')
+    let filename = document.getElementById("file-info").innerHTML
+    ipc.send('create-instant-query', {"query": instaQueryTxt.value, "bgColor": clrInstBg.value, "fgColor": clrInstFg.value, "filename": filename})
+    
 })
 document.addEventListener('mousemove', function(e){
     if (isResizing) {
@@ -51,6 +61,8 @@ amdRequire.config({
 
 ipc.on('Display-File', function(event, contents){
     console.log("Received file contents:");
+    fileInfo = document.getElementById("file-info")
+    fileInfo.innerHTML = contents.filename
     updateLogViewWindow(contents, "container")
     contents = null
 })
@@ -198,6 +210,12 @@ ipc.on('update-css-styles', function(event, cssText){
     style.innerHTML = cssText
     style.setAttribute('type', 'text/css')
     document.body.appendChild(style)
+})
+
+ipc.on('update-insta-css-style', function(event, cssText){
+    style = document.getElementById('insta-query-style')
+    console.log("style: ", style)
+    style.innerHTML = cssText
 })
 
 ipc.on('Increase-Font-Size', function(event){

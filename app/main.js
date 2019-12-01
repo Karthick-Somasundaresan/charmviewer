@@ -299,3 +299,19 @@ ipc.on("Get-Enabled-Bundle", function(event){
 ipc.on('Enable-Bundle', function(event, bundleName){
     appManager.getBundleHandler().enableBundle(bundleName, true)
 })
+
+ipc.on('create-instant-query', function(event, queryInfo){
+    console.log("Creating new query with info: ", {queryInfo})
+    queryJson = {"qid": 1, "query": queryInfo.query, "color": {"fgColor": queryInfo.fgColor, "bgColor": queryInfo.bgColor}}
+    instBundle = {"bundleName":"vwrInstaBndl", "queryCollection":{"1": queryJson}}
+    appManager.getBundleHandler().importBundle(instBundle, false)
+    instBundleObj = appManager.getBundleHandler().getBundle("vwrInstaBndl")
+    cssText = convertBundlesToCSS([instBundleObj])
+    win.webContents.send("update-insta-css-style", cssText)
+    // appManager.getBundleHandler().enableBundle("vwrInstaBndl", true)
+    actionHandler.filterFileWithBundle(queryInfo.filename, instBundleObj, function(filteredContents){
+        console.log("Inside callback!!!", filteredContents)
+        event.sender.send("Filtered-Output", filteredContents)
+    })
+
+})

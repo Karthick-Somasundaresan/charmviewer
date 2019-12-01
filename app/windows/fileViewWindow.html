@@ -1,6 +1,6 @@
 <html>
     <body>
-        <style>
+        <style id="insta-query-style">
         .trialCSS {color: brown;background: cornflowerblue;}
         /* #drag {
             position: absolute;
@@ -12,8 +12,22 @@
         } */
         </style>
         <div id="welcomeMsg">
-            <p><h1>Welcome to Chamviewer</h1></p>
-            <p>A log viewing utility</p>
+            <p><h1>Charmviewer</h1></p>
+            <p id="file-info">A log viewing utility</p>
+        </div>
+        <div id="instant-query-container" style="float: none;">
+                <div style="display: inline;">
+                    <label id="lblQuery">Instant Query:</label>
+                    <textarea id="txtInstQryArea" rows="2" cols="150"></textarea>
+                </div>
+                <div style="display: inline;">
+                        <label id="lblFGC">Fore color:</label>
+                        <input type="color" id="clrInstFg" value="#000000">
+                        <label id="lblBGC">Back color:</label>
+                        <input type="color" id="clrInstBg" value="#FFFFFF">
+                        <button id="btnRunInstQury" value="Inst filt Query">Filter Log</button>
+                </div>
+
         </div>
         <div id="big-container" style="width:100%;height:880px;border:5px solid #ccc">
             <div id="container" style="width:100%;height:635px;border:1px solid #ccc">

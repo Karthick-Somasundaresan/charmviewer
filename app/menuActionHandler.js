@@ -58,7 +58,7 @@ fileOperation.fileEvents.on('read-complete', function(window, filename){
     console.log("File read completely")
     contents = fileOperation.getFileContents(filename)
     window["filename"] = filename
-    window.webContents.send("Display-File", {"logs": contents})
+    window.webContents.send("Display-File", {"logs": contents, "filename": filename})
 
 })
 function selectBundle(menuItem, window, event) {
