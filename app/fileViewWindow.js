@@ -8,6 +8,8 @@ var editor = null
 var filtEditor = null
 const fontSizeArray = [8, 10, 12, 14, 16, 18, 20, 24, 28, 32]
 var currentFontIndex = 3
+var fileDecorList = []
+var filtDecorList = []
 function uriFromPath(_path) {
 	var pathName = path.resolve(_path).replace(/\\/g, '/');
 	if (pathName.length > 0 && pathName.charAt(0) !== '/') {
@@ -86,30 +88,41 @@ ipc.on("Filtered-Output", function(event, filteredContent){
 })
 
 function updateLogDecorations(viewEditor, line, cssRule) {
+    removePreviousDecors()
     for (let index = 0; index < cssRule.length; index++) {
         const element = cssRule[index];
         if (viewEditor === filtEditor){
-            viewEditor.deltaDecorations([], [{
+            decor = viewEditor.deltaDecorations([], [{
                 range: new monaco.Range(index + 1, 1, index + 1, 1),
                 options: {
                     isWholeLine: true,
                     inlineClassName: element
                 }
             }])
+            filtDecorList.push(decor)
         } else {
-            viewEditor.deltaDecorations([], [{
+            decor = viewEditor.deltaDecorations([], [{
                 range: new monaco.Range(line[index + 1], 1, line[index + 1], 1),
                 options: {
                     isWholeLine: true,
                     inlineClassName: element
                 }
             }])
+            fileDecorList.push(decor)
         }
          
     }
 } 
 
 
+function removePreviousDecors() {
+    if(editor !== null) {
+        fileDecorList = editor.deltaDecorations(fileDecorList, [])
+    }
+    if(filtEditor !== null){
+        filtDecorList = editor.deltaDecorations(filtDecorList, [])
+    }
+}
 
 function updateLogViewWindow(content, containerId) {
     amdRequire(['vs/editor/editor.main'], function() {
