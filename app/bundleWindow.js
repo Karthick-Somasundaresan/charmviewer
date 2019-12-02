@@ -111,11 +111,19 @@ importBundle.addEventListener('click', function(event){
 
 exportBundle.addEventListener('click', function(event){
     console.log("Export button clicked: ", event)
-    dialog.showSaveDialog({"buttonLabel": "Export"}, function(fileName){
-        bundleToExport = bundleLstDisp.value
-        console.log("fileName: ", fileName, " Bundle: ", bundleToExport)
-        ipc.send("Export-Bundle-File", {"fileName": fileName, "bundleToExport": bundleToExport})
-    })
+    bundleToExport = bundleLstDisp.value
+    if(bundleToExport === null || bundleToExport === undefined || bundleToExport === ""){
+        dialog.showErrorBox("Select Error", "Select a bundle to export!")
+
+    } else {
+        dialog.showSaveDialog({"buttonLabel": "Export"}, function(fileName){
+            console.log("fileName: ", fileName, " Bundle: ", bundleToExport)
+            if (fileName !== null && fileName !== undefined && fileName !== "" && bundleToExport !== null && bundleToExport !== undefined && bundleToExport !== ""){
+                ipc.send("Export-Bundle-File", {"fileName": fileName, "bundleToExport": bundleToExport})
+            }
+        })
+    }
+    
 })
 
 function changePriority(event){

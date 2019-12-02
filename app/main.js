@@ -260,14 +260,16 @@ ipc.on("Show-Bundle-Edit-Window", function(event, bundleName){
 
 
 ipc.on('Import-Bundle-File', function(event, fileName){
-    let rawBundle = fs.readFileSync(fileName[0])
-    let bundleJson = undefined
-    try {
-        bundleJson = JSON.parse(rawBundle)
-        appManager.getBundleHandler().importBundle(bundleJson)
-        actionHandler.updateBundleWindow()
-    } catch (error) {
-        dialog.showErrorBox("Unable to open file", "Unable to open file:" + fileName)
+    if (fileName !== null && fileName !== undefined && typeof fileName === "object" && fileName.length > 0){
+        let rawBundle = fs.readFileSync(fileName[0])
+        let bundleJson = undefined
+        try {
+            bundleJson = JSON.parse(rawBundle)
+            appManager.getBundleHandler().importBundle(bundleJson)
+            actionHandler.updateBundleWindow()
+        } catch (error) {
+            dialog.showErrorBox("Unable to open file", "Unable to open file:" + fileName)
+        }
     }
 })
 
