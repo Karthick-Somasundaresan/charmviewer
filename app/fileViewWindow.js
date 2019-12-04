@@ -7,7 +7,9 @@ const btnRunInstQury = document.getElementById('btnRunInstQury')
 var editor = null
 var filtEditor = null
 const fontSizeArray = [8, 10, 12, 14, 16, 18, 20, 24, 28, 32]
-var currentFontIndex = 3
+const fontFamilyArray = ["Arial", "Courier", "Consolas", "Hack", "Menlo", "Monaco", "Times New Roman" ]
+var currentFontSizeIndex = 3
+var currentFontFamilyIndex = 5
 var fileDecorList = []
 var filtDecorList = []
 function uriFromPath(_path) {
@@ -136,7 +138,8 @@ function updateLogViewWindow(content, containerId) {
                     value: content.logs.join('\n'),
                     automaticLayout: true,
                     readOnly: true,
-                    fontSize: fontSizeArray[currentFontIndex]
+                    fontSize: fontSizeArray[currentFontSizeIndex],
+                    fontFamily: fontFamilyArray[currentFontFamilyIndex]
                 });
             } else {
                 editor.setValue(content.logs.join('\n'))
@@ -149,7 +152,8 @@ function updateLogViewWindow(content, containerId) {
                     automaticLayout: true,
                     lineNumbers: mapLineNumbers,
                     readOnly: true,
-                    fontSize: fontSizeArray[currentFontIndex]
+                    fontSize: fontSizeArray[currentFontSizeIndex],
+                    fontFamily: fontFamilyArray[currentFontFamilyIndex]
                 })
             } else {
                 filtEditor.setValue(content.logs.join('\n'))
@@ -233,17 +237,17 @@ ipc.on('update-insta-css-style', function(event, cssText){
 
 ipc.on('Increase-Font-Size', function(event){
     console.log("Received command to increase fontsize")
-    if (currentFontIndex != fontSizeArray.length - 2){
-        currentFontIndex += 1
+    if (currentFontSizeIndex != fontSizeArray.length - 2){
+        currentFontSizeIndex += 1
         if (filtEditor !== null) {
             filtEditor.updateOptions({
-                fontSize: fontSizeArray[currentFontIndex]
+                fontSize: fontSizeArray[currentFontSizeIndex]
             })
         }
         
         if(editor !== null){
             editor.updateOptions({
-                fontSize: fontSizeArray[currentFontIndex]
+                fontSize: fontSizeArray[currentFontSizeIndex]
             })
         }
         
@@ -252,17 +256,37 @@ ipc.on('Increase-Font-Size', function(event){
 
 ipc.on('Decrease-Font-Size', function(event){
     console.log("Received command to decrease fontsize")
-    if (currentFontIndex != 0){
-        currentFontIndex -= 1
+    if (currentFontSizeIndex != 0){
+        currentFontSizeIndex -= 1
         if (filtEditor !== null ){
             filtEditor.updateOptions({
-                fontSize: fontSizeArray[currentFontIndex]
+                fontSize: fontSizeArray[currentFontSizeIndex]
             })
         }
         if (editor !== null) {
             editor.updateOptions({
-                fontSize: fontSizeArray[currentFontIndex]
+                fontSize: fontSizeArray[currentFontSizeIndex]
             })
         }
     }
+})
+
+
+ipc.on('update-preferences', function(event, preferenceObj){
+    if (filtEditor !== null){
+        filtEditor.updateOptions({
+            fontSize: preferenceObj.fontSize,
+            fontFamily: preferenceObj.fontFamily
+        })
+    }
+    if (editor !== null){
+        editor.updateOptions({
+            fontSize: preferenceObj.fontSize,
+            fontFamily: preferenceObj.fontFamily
+        })
+    }
+    currentFontSizeIndex = fontSizeArray.indexOf(parseInt(preferenceObj.fontSize))
+    currentFontFamilyIndex = fontFamilyArray.indexOf(preferenceObj.fontFamily)
+    console.log({currentFontFamilyIndex, currentFontSizeIndex})
+    monaco.editor.setTheme(preferenceObj.theme)
 })

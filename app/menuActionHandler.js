@@ -91,14 +91,36 @@ function reduceFontSize(item, focusedWindow) {
     focusedWindow.webContents.send("Decrease-Font-Size")
 }
 
+function showPreferences(item, focusedWindow){
+    console.log("Received Item: ", {item})
+    let modalPath = path.join("file://", __dirname, "./windows/preferences.html")
+    console.log("Modal PAth: ", modalPath)
+    preferenceWindow = new BrowserWindow({width: 760, height: 280, 
+        show: false,
+        // backgroundColor: '#2e2c29',
+        webPreferences: {
+            nodeIntegration: true
+          },
+         resizable: false,
+        maximizable: false})
+    preferenceWindow.webContents.openDevTools()
+    preferenceWindow.on('close', ()=>{preferenceWindow = null})
+    preferenceWindow.loadURL(modalPath)
+    preferenceWindow.on('ready-to-show', function(){
+        preferenceWindow.show()
+    })
+
+}
+
 module.exports = { 
+    showPreferences: showPreferences,
     openBundleWindow: openBundleWindow,
     updateBundleWindow: updateBundleWindow,
     selectBundle: selectBundle,
     postman: postman,
-    filterFileWithBundle, filterFileWithBundle,
-    increaseFontSize, increaseFontSize,
-    reduceFontSize, reduceFontSize,
+    filterFileWithBundle: filterFileWithBundle,
+    increaseFontSize: increaseFontSize,
+    reduceFontSize: reduceFontSize,
     loadFile: loadFile
 
 }

@@ -66,7 +66,7 @@ function createApplicationMenu(bundleList){
         }]
     };
     viewMenu = {
-        label: "view",
+        label: "View",
         submenu:[{
             label: "show line"
         }, {
@@ -90,17 +90,32 @@ function createApplicationMenu(bundleList){
         }]
     };
     aboutMenu = {
-        label: "About"
+        label: "About",
+        submenu: [{
+            label: "Help"
+        }]
     };
-    // let template = [ fileMenu, editMenu, bundleMenu, viewMenu, aboutMenu]
-    let template = [ fileMenu, editMenu, bundleMenu, viewMenu, aboutMenu]
-    if (process.platform === 'darwin'){
+    toolsMenu = {
+        label: "Tools",
+        submenu:[{
+            label: "Preferences",
+            accelerator: "Ctrl + ,",
+            click: actionHandler.showPreferences
+        }]
+    }
+    let template
+    if (process.platform !== 'darwin'){
+        template = [ fileMenu, editMenu, bundleMenu, viewMenu, toolsMenu, aboutMenu]
+    } else {
+
+        template = [ fileMenu, editMenu, bundleMenu, viewMenu, aboutMenu]
         const appName = app.getName()
         template.unshift({
             'label': appName,
             'submenu': [{
                 'label': 'preferences...',
-                'accelerator': "Command+,"
+                'accelerator': "Command+,",
+                'click': actionHandler.showPreferences
             }, {
                 label: "Quit " + appName,
                 'accelerator':  "Command+Q",
@@ -316,4 +331,8 @@ ipc.on('create-instant-query', function(event, queryInfo){
         event.sender.send("Filtered-Output", filteredContents)
     })
 
+})
+
+ipc.on('update-usr-preferences', function(event, preferences){
+    win.webContents.send('update-preferences', preferences)
 })

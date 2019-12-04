@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Preferences</title>
+</head>
+<body>
+    <div style="border: thin;">
+        <div id="font-grp">
+            <div style="border: thin;">
+                <label for="font-size">Font Size</label>
+                <select id="font-size">
+                        <option>8</option>
+                        <option>10</option>
+                        <option>12</option>
+                        <option>14</option>
+                        <option>16</option>
+                        <option>18</option>
+                        <option>20</option>
+                        <option>24</option>
+                        <option>28</option>
+                        <option>32</option>
+                </select>
+            </div>
+            <div>
+                <label for="font-family">Font Family</label>
+                <select name="fntFam" id="font-family">
+                    <option>Arial</option>
+                    <option>Courier</option>
+                    <option>Consolas</option>
+                    <option>Hack</option>
+                    <option>Menlo</option>
+                    <option>Monaco</option>
+                    <option>Times New Roman</option>
+                </select>
+            </div>
+        </div>
+        <div>
+            <label for="theme">Theme</label>
+            <select name="theme" id="theme">
+                <option value="vs">vs</option>
+                <option value="vs-dark">vs-dark</option>
+            </select>
+        </div>
+    </div>
+    <div style="float: right;"></div>
+        <button id="btnCancelPrefer" >Cancel</button> 
+        <button id="btnSavePrefer" >Save</button> 
+    </div>
+    <script src = "../preference.js"></script> 
+</body>
+</html>
