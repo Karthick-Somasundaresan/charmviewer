@@ -16,7 +16,7 @@
   },
   "scripts": {
     "test": "node queryResolver.js",
-    "start": "electron app/main.js"
+    "start": "electron --inspect=5858 app/main.js"
   },
   "repository": {
     "type": "git",

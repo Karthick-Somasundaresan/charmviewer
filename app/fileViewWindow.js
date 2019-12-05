@@ -138,6 +138,7 @@ function updateLogViewWindow(content, containerId) {
                     value: content.logs.join('\n'),
                     automaticLayout: true,
                     readOnly: true,
+                    minimap: {enabled:false},
                     fontSize: fontSizeArray[currentFontSizeIndex],
                     fontFamily: fontFamilyArray[currentFontFamilyIndex]
                 });
@@ -152,6 +153,7 @@ function updateLogViewWindow(content, containerId) {
                     automaticLayout: true,
                     lineNumbers: mapLineNumbers,
                     readOnly: true,
+                    minimap: {enabled:false},
                     fontSize: fontSizeArray[currentFontSizeIndex],
                     fontFamily: fontFamilyArray[currentFontFamilyIndex]
                 })

@@ -62,7 +62,13 @@ function createApplicationMenu(bundleList){
     editMenu = {
         label: "Edit",
         submenu: [{
-            label: "Find"
+            label: "Copy",
+            accelerator: "CmdOrCtrl + C",
+            selector: "copy:"
+        }, {
+            label: "Paste",
+            accelerator: "CmdOrCtrl + V",
+            selector: "paste:"
         }]
     };
     viewMenu = {
