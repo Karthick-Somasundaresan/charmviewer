@@ -5,10 +5,36 @@ const appManager = require("./appManager")
 const path = require('path')
 const fs = require('fs')
 const dialog = require('electron').dialog
+const MenuItem = require('electron').MenuItem
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win
 
+function updateBundleMenu(item, focusedWindow){
+    menu = app.getApplicationMenu()
+    actionHandler.openBundleWindow(item, focusedWindow)
+}
+
+function addBundleNameToMenu(bundleName) {
+    menu = app.getApplicationMenu()
+    bundleMenu = menu.items[menu.items.findIndex(function(item){ return item.label === "Bundle"})]
+    bundleObj = {}
+    bundleObj["label"] = bundleName
+    bundleObj["type"] = "radio"
+    bundleObj["checked"] = false
+    bundleObj["click"] = enableBundle
+    // bundleObj["click"] = actionHandler.selectBundle
+    
+    bundleMenu.submenu.items.push(new MenuItem(bundleObj))
+    Menu.setApplicationMenu(menu)
+}
+
+function removeBundleNameFromMenu(bundleName) {
+    menu = app.getApplicationMenu()
+    bundleMenu = menu.items[menu.items.findIndex(function(item){ return item.label === "Bundle"})]
+    bundleMenu.submenu.items.splice(bundleMenu.submenu.items.findIndex(function(item) { return item.label === bundleName}), 1)
+    Menu.setApplicationMenu(menu)
+}
 
 function createBundleMenu(bundleList){
     var bundleMenu = {
@@ -153,7 +179,7 @@ function convertBundlesToCSS(allBundles) {
     return cssText
 }
 
-function createWindow (allBundles) {
+function createWindow (allBundles, bundleNameList) {
   // Create the browser window.
   console.log("Creating Application Window")
   textCss = convertBundlesToCSS(allBundles)
@@ -182,6 +208,7 @@ function createWindow (allBundles) {
   win.webContents.on('did-finish-load', function(){
       console.log("Ready to show page: ", textCss)
     win.webContents.send("update-css-styles", textCss)
+    win.webContents.send("bundle-names", bundleNameList)
   })
 }
 
@@ -197,7 +224,7 @@ app.on('ready', function(){
     let bundleList = appManager.getBundleHandler().getAllBundleNames()
     let allBundles = appManager.getBundleHandler().getAllBundles()
     createApplicationMenu(bundleList)
-    createWindow(allBundles)
+    createWindow(allBundles, bundleList)
 })
 
 // Quit when all windows are closed.
@@ -230,6 +257,7 @@ ipc.on('Test-Msg', function(event,args){
 
 ipc.on('Create-Bundle', function(event, bundleObj){
     console.log("Received Create-Bundle Event with arg:", bundleObj)
+    addBundleNameToMenu(bundleObj.bundleName)
     appManager.getBundleHandler().createBundle(bundleObj.bundleName, bundleObj.queryList)
     actionHandler.updateBundleWindow()
     
@@ -249,6 +277,7 @@ ipc.on("Bundle-Obj-Request", function(event, selectedBundleName){
 
 
 ipc.on('Delete-Bundle-Request', function(event, deleteBundleName){
+    removeBundleNameFromMenu(deleteBundleName)
     appManager.getBundleHandler().deleteBundle(deleteBundleName)
     actionHandler.updateBundleWindow()
 })

@@ -4,6 +4,8 @@ const path = require('path')
 const amdRequire = amdLoader.require;
 const amdDefine = amdLoader.require.define
 const btnRunInstQury = document.getElementById('btnRunInstQury')
+const bndlContainer = document.getElementById('enable-bundle-container')
+const selectBundle = document.getElementById('select-bundle')
 var editor = null
 var filtEditor = null
 const fontSizeArray = [8, 10, 12, 14, 16, 18, 20, 24, 28, 32]
@@ -68,6 +70,7 @@ ipc.on('Display-File', function(event, contents){
     fileInfo = document.getElementById("file-info")
     fileInfo.innerHTML = contents.filename
     updateLogViewWindow(contents, "container")
+    bndlContainer.style.display = 'block'
     contents = null
 })
 
@@ -273,6 +276,19 @@ ipc.on('Decrease-Font-Size', function(event){
     }
 })
 
+function createOptionHTML(listOfOptions){
+    var optionHTML = ""
+    for (option in listOfOptions ){
+        optionHTML = optionHTML + '<option value="'+ listOfOptions[option] +'">'+ listOfOptions[option]+ '</option>'
+    }
+    return optionHTML
+}
+
+ipc.on('bundle-names', function(event, bundlenames){
+    bundlenames.unshift("None")
+    optionHTML = createOptionHTML(bundlenames)
+    selectBundle.innerHTML = optionHTML
+})
 
 ipc.on('update-preferences', function(event, preferenceObj){
     if (filtEditor !== null){
