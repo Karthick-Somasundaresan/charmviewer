@@ -6,9 +6,9 @@ const dialog = require('electron').dialog
 const fileOperation = require('../lib/FileOperations')
 let bundleWindow = null
 function openBundleWindow(item, focusedWindow){
-    console.log("Received Item: ", {item})
+    // console.log("Received Item: ", {item})
     let modalPath = path.join("file://", __dirname, "./windows/bundleWindow.html")
-    console.log("Modal PAth: ", modalPath)
+    // console.log("Modal PAth: ", modalPath)
     bundleWindow = new BrowserWindow({width: 760, height: 280, 
         show: false,
         // backgroundColor: '#2e2c29',
@@ -17,24 +17,24 @@ function openBundleWindow(item, focusedWindow){
           },
          resizable: false,
         maximizable: false})
-    bundleWindow.webContents.openDevTools()
+    // bundleWindow.webContents.openDevTools()
     bundleWindow.on('close', ()=>{bundleWindow = null})
     bundleWindow.loadURL(modalPath)
     bundleWindow.on('ready-to-show', function(){
     // })
     // win.on('did-finish-load', function(){
-        console.log("Emitting event Show-Bundle-Window")
+        // console.log("Emitting event Show-Bundle-Window")
         bundleWindow.webContents.send("Show-Bundle-Window")
         bundleWindow.show()
     })
 }
 
 ipc.on('Show-Bundle-Edit-Window', function(){
-    console.log("Received Show-Bundle-Edit-Window")
+    // console.log("Received Show-Bundle-Edit-Window")
 })
 
 ipc.on('Test-Msg', function(event,args){
-    console.log("Received test msg in menuActionHandler.js")
+    // console.log("Received test msg in menuActionHandler.js")
 })
 
 
@@ -48,29 +48,29 @@ function postman(eventName, args) {
 
 function loadFile(item, focusedWindow){
     dialog.showOpenDialog({properties:["openFile"]}, function(filename){
-        console.log("Trying to open: ", filename)
+        // console.log("Trying to open: ", filename)
         // focusedWindow.webContents.send("File-To-Load", filename[0])
         fileOperation.openFileOperation(filename[0], focusedWindow)
     })
 }
 
 fileOperation.fileEvents.on('read-complete', function(window, filename){
-    console.log("File read completely")
+    // console.log("File read completely")
     contents = fileOperation.getFileContents(filename)
     window["filename"] = filename
     window.webContents.send("Display-File", {"logs": contents, "filename": filename})
 
 })
 function selectBundle(menuItem, window, event) {
-    console.log("Received MenuItem:", {menuItem})
-    console.log("Received Event: ", {event})
+    // console.log("Received MenuItem:", {menuItem})
+    // console.log("Received Event: ", {event})
     // ipc.send("Enable-Bundle", menuItem.label)
     window.webContents.send("Bundle-Change-Event", menuItem.label)
 }
 
 function filterFileWithBundle (filename, bundleObj, callback){
-    console.log("Inside Menu-Action-Handler: ", {bundleObj})
-    console.log("Received bundleObj query count in menuActionHandler: ", bundleObj.getQueryListSize())
+    // console.log("Inside Menu-Action-Handler: ", {bundleObj})
+    // console.log("Received bundleObj query count in menuActionHandler: ", bundleObj.getQueryListSize())
     // dummyResponse = []
     // dummyResponse.push("This is a simple response\n") 
     // dummyResponse.push("This is not a real response\n")
@@ -82,19 +82,19 @@ function filterFileWithBundle (filename, bundleObj, callback){
 }
 
 function increaseFontSize(item, focusedWindow){
-    console.log("Increase Font size")
+    // console.log("Increase Font size")
     focusedWindow.webContents.send("Increase-Font-Size")
 }
 
 function reduceFontSize(item, focusedWindow) {
-    console.log("Decrease font size")
+    // console.log("Decrease font size")
     focusedWindow.webContents.send("Decrease-Font-Size")
 }
 
 function showPreferences(item, focusedWindow){
-    console.log("Received Item: ", {item})
+    // console.log("Received Item: ", {item})
     let modalPath = path.join("file://", __dirname, "./windows/preferences.html")
-    console.log("Modal PAth: ", modalPath)
+    // console.log("Modal PAth: ", modalPath)
     preferenceWindow = new BrowserWindow({width: 760, height: 280, 
         show: false,
         // backgroundColor: '#2e2c29',
@@ -103,7 +103,7 @@ function showPreferences(item, focusedWindow){
           },
          resizable: false,
         maximizable: false})
-    preferenceWindow.webContents.openDevTools()
+    // preferenceWindow.webContents.openDevTools()
     preferenceWindow.on('close', ()=>{preferenceWindow = null})
     preferenceWindow.loadURL(modalPath)
     preferenceWindow.on('ready-to-show', function(){

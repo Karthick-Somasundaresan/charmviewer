@@ -38,41 +38,41 @@ function getRequiredInfo(selectedInfo = 0){
     bundleList = bundleHandler.getAllBundleNames()
     // console.log(bundleList)
     optLstHtml = createOptionHTML(bundleList, "opt")
-    console.log("Option HTML Str: ", optLstHtml)
-    console.log("Selected Info: ", selectedInfo)
+    // console.log("Option HTML Str: ", optLstHtml)
+    // console.log("Selected Info: ", selectedInfo)
     bundleLstDisp.innerHTML = optLstHtml
     selectedBundle = bundleHandler.getBundle(bundleList[selectedInfo])
-    console.log("Selected bundle: ", selectedBundle)
-    console.log("Selected Bundle's Query list: ", selectedBundle.queryCollection)
+    // console.log("Selected bundle: ", selectedBundle)
+    // console.log("Selected Bundle's Query list: ", selectedBundle.queryCollection)
     qryLstHtml = createQueryLstHTML(selectedBundle.queryCollection)
     queryLstDisp.innerHTML = qryLstHtml
-    console.log("Query List HTML: ", qryLstHtml)
+    // console.log("Query List HTML: ", qryLstHtml)
 }
 
 ipc.on('Bundle-Obj-Response', function(event, selectedBundle){
-    console.log("Selected bundle: ", selectedBundle)
-    console.log("Selected Bundle's Query list: ", selectedBundle.queryCollection)
+    // console.log("Selected bundle: ", selectedBundle)
+    // console.log("Selected Bundle's Query list: ", selectedBundle.queryCollection)
     qryLstHtml = createQueryLstHTML(selectedBundle.queryCollection)
     queryLstDisp.innerHTML = qryLstHtml
-    console.log("Query List HTML: ", qryLstHtml)
+    // console.log("Query List HTML: ", qryLstHtml)
 
 })
 
 bundleLstDisp.addEventListener('change', function(value){
     // let bundleHandler = appManager.getBundleHandler()
-    console.log("Changed Value: ", bundleLstDisp.value)
+    // console.log("Changed Value: ", bundleLstDisp.value)
     // selectedBundle = bundleHandler.getBundle(bundleLstDisp.value)
     ipc.send('Bundle-Obj-Request', bundleLstDisp.value)
 })
 
 bundleLstDisp.addEventListener('dblclick', function(event){
-    console.log("Double Clicked on bundle: ", bundleLstDisp.value)
+    // console.log("Double Clicked on bundle: ", bundleLstDisp.value)
     ipc.send('Show-Bundle-Edit-Window', bundleLstDisp.value)
 })
 
 
 addBundle.addEventListener('click', function(event){
-    console.log("Add button clicked: ", event)
+    // console.log("Add button clicked: ", event)
     // let modalPath = path.join("file://", __dirname, "./updateBundleWindow.html")
     // win = new BrowserWindow({height:280, width:760,webPreferences: {
     //     nodeIntegration: true
@@ -95,29 +95,29 @@ addBundle.addEventListener('click', function(event){
 
 
 rmBundle.addEventListener('click', function(event){
-    console.log("Delete button clicked: ", bundleLstDisp.value)
+    // console.log("Delete button clicked: ", bundleLstDisp.value)
     ipc.send('Delete-Bundle-Request', bundleLstDisp.value)
 })
 
 
 importBundle.addEventListener('click', function(event){
-    console.log("Import button clicked: ", event)
+    // console.log("Import button clicked: ", event)
     dialog.showOpenDialog({properties:["openFile"]},function(fileName){
-        console.log("Import bundle from file: ", fileName);
+        // console.log("Import bundle from file: ", fileName);
         ipc.send("Import-Bundle-File", fileName)
     })
 })
 
 
 exportBundle.addEventListener('click', function(event){
-    console.log("Export button clicked: ", event)
+    // console.log("Export button clicked: ", event)
     bundleToExport = bundleLstDisp.value
     if(bundleToExport === null || bundleToExport === undefined || bundleToExport === ""){
         dialog.showErrorBox("Select Error", "Select a bundle to export!")
 
     } else {
         dialog.showSaveDialog({"buttonLabel": "Export"}, function(fileName){
-            console.log("fileName: ", fileName, " Bundle: ", bundleToExport)
+            // console.log("fileName: ", fileName, " Bundle: ", bundleToExport)
             if (fileName !== null && fileName !== undefined && fileName !== "" && bundleToExport !== null && bundleToExport !== undefined && bundleToExport !== ""){
                 ipc.send("Export-Bundle-File", {"fileName": fileName, "bundleToExport": bundleToExport})
             }
@@ -129,7 +129,7 @@ exportBundle.addEventListener('click', function(event){
 function changePriority(event){
     
     bundleName = ""
-    console.log(event.path[1].id)
+    // console.log(event.path[1].id)
     if(bundleLstDisp.value === undefined || bundleLstDisp.value === null || bundleLstDisp.value === ""){
         bundleName = bundleLstDisp[0].value
     } else {
@@ -160,31 +160,31 @@ moveDnQuery.addEventListener('click', changePriority)
 // })
 
 ipc.on('All-Bundle-Response', function(event, bundleInfo){
-    console.log("Received Bundle Info: ", {bundleInfo})
+    // console.log("Received Bundle Info: ", {bundleInfo})
     bundleNameList = []
     for (obj in bundleInfo){
         bundleNameList.push(bundleInfo[obj].bundleName)
     }
     // bundleNameList = Object.keys(bundleInfo)
-    console.log(bundleNameList)
+    // console.log(bundleNameList)
     optLstHtml = createOptionHTML(bundleNameList, "opt")
     bundleLstDisp.innerHTML = optLstHtml
     selectedBundle = bundleInfo[0]
-    console.log("Selected Bundle's Query list: ", selectedBundle.queryCollection)
+    // console.log("Selected Bundle's Query list: ", selectedBundle.queryCollection)
     qryLstHtml = createQueryLstHTML(selectedBundle.queryCollection)
     queryLstDisp.innerHTML = qryLstHtml
-    console.log("Query List HTML: ", qryLstHtml)
+    // console.log("Query List HTML: ", qryLstHtml)
 })
 ipc.on('Show-Bundle-Window', function(){
-    console.log("Received Shhow-Bundle-Window in BundleWindow.js")
+    // console.log("Received Shhow-Bundle-Window in BundleWindow.js")
     // getRequiredInfo()
     ipc.send("All-Bundle-Request")
 })
 
 ipc.on('Test-Msg-Reply', function(){
-    console.log("Received Test-Msg-Reply")
+    // console.log("Received Test-Msg-Reply")
 })
 
 ipc.on('Show-Bundle-Edit-Window', function(){
-    console.log("Received Shhow-Bundle-Edit-Window in BundleWindow.js")
+    // console.log("Received Shhow-Bundle-Edit-Window in BundleWindow.js")
 })

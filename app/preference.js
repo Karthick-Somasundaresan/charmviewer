@@ -18,7 +18,7 @@ saveBtn.addEventListener('click', function(){
     let sizeVal = fntSize.value
     let familyVal = fntFam.value
     let thm = theme.value
-    console.log({sizeVal, familyVal, thm})
+    // console.log({sizeVal, familyVal, thm})
     ipc.send('update-usr-preferences', {"fontSize": sizeVal, "fontFamily": familyVal, "theme":thm})
     window.close()
 })

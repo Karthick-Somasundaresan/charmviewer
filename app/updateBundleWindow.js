@@ -16,7 +16,7 @@ const bndlEnbl = document.getElementById("bndlEnable")
 const bndlName = document.getElementById("txtBndlName")
 // const styleTag = document.getElementById("updtBndlWnd_styl")
 function delRow(rowId){
-    console.log("Row to be deleted: ", rowId)
+    // console.log("Row to be deleted: ", rowId)
     queryTable.deleteRow(rowId)
     dialog.showErrorBox("Delete Query", "Row deleted Successfully")
 }
@@ -33,7 +33,7 @@ function addToQueryTable(query, fgColor, bgColor){
     queryRow = queryTable.insertRow(rowCnt)
     queryCell = queryRow.insertCell(0)
     delCell = queryRow.insertCell(1)
-    console.log("QueryCellHTML:", queryCellHTML)
+    // console.log("QueryCellHTML:", queryCellHTML)
     queryCell.innerHTML = queryCellHTML
     // queryCell.innerHTML = '<td style="background-color:' + bgColor + '; color:' + fgColor + '">' + query + '</td>'
     delCell.innerHTML = deleteCellHTML
@@ -42,9 +42,9 @@ function addToQueryTable(query, fgColor, bgColor){
 }
 
 addQueryBtn.addEventListener('click', function(){
-    console.log("Query Value:", queryArea.value)
-    console.log("FG color: ", fgColor.value)
-    console.log("BG coloHEX r: ", bgColor.value)
+    // console.log("Query Value:", queryArea.value)
+    // console.log("FG color: ", fgColor.value)
+    // console.log("BG coloHEX r: ", bgColor.value)
     addToQueryTable(queryArea.value, fgColor.value, bgColor.value)
 })
 
@@ -83,20 +83,20 @@ saveBtn.addEventListener('click', function(){
     // document.getElementById("tblQryLst").rows[2].getElementsByTagName("p")[0].style["background-color"]
     for(let i = 1; i < rowCnt; i++){
         tempObj = {}
-        console.log("index: ", i)
+        // console.log("index: ", i)
         // console.log("cell HTML content:", queryTable.rows[i].cells[0].innerHTML)
         let query = queryTable.rows[i].getElementsByTagName("p")[0].innerHTML
         let bgColor = convertRGBtoHEX(queryTable.rows[i].getElementsByTagName("p")[0].style["background-color"])
         let fgColor = convertRGBtoHEX(queryTable.rows[i].getElementsByTagName("p")[0].style["color"])
-        console.log("cell Value content:", queryTable.rows[i].getElementsByTagName("p")[0].innerHTML)
-        console.log("cell bgColor:", convertRGBtoHEX(queryTable.rows[i].getElementsByTagName("p")[0].style["background-color"]))
-        console.log("cell fgColor:", convertRGBtoHEX(queryTable.rows[i].getElementsByTagName("p")[0].style["color"]))
+        // console.log("cell Value content:", queryTable.rows[i].getElementsByTagName("p")[0].innerHTML)
+        // console.log("cell bgColor:", convertRGBtoHEX(queryTable.rows[i].getElementsByTagName("p")[0].style["background-color"]))
+        // console.log("cell fgColor:", convertRGBtoHEX(queryTable.rows[i].getElementsByTagName("p")[0].style["color"]))
         tempObj = {"query": query, "color": {"fgColor": fgColor, "bgColor": bgColor}}
         queryLst.push(tempObj)
     }
     bundle = {"bundleName": bundleName, "queryList": queryLst}
     ipc.send("Create-Bundle", bundle)
-    console.log("Create Bundle: ", bundle)
+    // console.log("Create Bundle: ", bundle)
     window.close()
 })
 
@@ -108,7 +108,7 @@ function updatePageElements(bundleObj){
 }
 
 ipc.on('Show-Bundle-Edit-Window', function(event, args){
-    console.log("Received Show-Bundle-Edit-Window in updateBundleWindow.js", event, args)
+    // console.log("Received Show-Bundle-Edit-Window in updateBundleWindow.js", event, args)
     if (args !== undefined && args !== null){
         updatePageElements(args)
     }

@@ -28,10 +28,14 @@ dragDiv = document.getElementById("drag")
 dragDiv.addEventListener("mousedown", function(event){
     isResizing = true
     last_mouse_pos = event.y
-    console.log("Started resizing")
+    // console.log("Started resizing")
+})
+
+selectBundle.addEventListener('change', function(){
+    ipc.send('enable-bundle', selectBundle.value)
 })
 btnRunInstQury.addEventListener('click', function(e){
-    console.log("Instantly filtering logs")
+    // console.log("Instantly filtering logs")
     let instaQueryTxt = document.getElementById('txtInstQryArea')
     let clrInstBg = document.getElementById('clrInstBg')
     let clrInstFg = document.getElementById('clrInstFg')
@@ -58,7 +62,7 @@ document.addEventListener('mousemove', function(e){
 })
 document.addEventListener('mouseup', function(e){
     isResizing = false
-    console.log("Done resizing")
+    // console.log("Done resizing")
 
 })
 amdRequire.config({
@@ -66,7 +70,7 @@ amdRequire.config({
 });
 
 ipc.on('Display-File', function(event, contents){
-    console.log("Received file contents:");
+    // console.log("Received file contents:");
     fileInfo = document.getElementById("file-info")
     fileInfo.innerHTML = contents.filename
     updateLogViewWindow(contents, "container")
@@ -86,7 +90,7 @@ function mapLineNumbers(origlineNo) {
 }
 var linemap = []
 ipc.on("Filtered-Output", function(event, filteredContent){
-    console.log("Received filtered output", filteredContent)
+    // console.log("Received filtered output", filteredContent)
     linemap = filteredContent.lines
     linemap.unshift(0)
     updateLogViewWindow(filteredContent,"filter-container")
@@ -133,7 +137,7 @@ function updateLogViewWindow(content, containerId) {
     amdRequire(['vs/editor/editor.main'], function() {
 
         
-        console.log("About to create an editor", typeof(content))
+        // console.log("About to create an editor", typeof(content))
         if (containerId === "container"){
             
             if (editor === null) {
@@ -189,7 +193,7 @@ function updateLogViewWindow(content, containerId) {
         }
 		;
 	}, function(arg){
-        console.log("Error in display: ", arg)
+        // console.log("Error in display: ", arg)
     });
 }
 
@@ -198,8 +202,8 @@ function filterEditerMouseDown(event) {
 
         clickedLine = event.target.position.lineNumber;
         mappedLine = mapLineNumbers(clickedLine)
-        console.log("Clicked on line: ", clickedLine)
-        console.log("Mapped line in the main editor: ", mappedLine)
+        // console.log("Clicked on line: ", clickedLine)
+        // console.log("Mapped line in the main editor: ", mappedLine)
         if(editor !== null && editor !== undefined) {
             editor.revealLine(mappedLine)
             // editor.deltaDecorations([],[
@@ -226,7 +230,7 @@ function filterEditerMouseDown(event) {
 
 ipc.on('update-css-styles', function(event, cssText){
     style = document.getElementById('viewer-css')
-    console.log("style: ", style)
+    // console.log("style: ", style)
     style = document.createElement("style")
     style.setAttribute("id", "viewer-css")
     style.innerHTML = cssText
@@ -236,12 +240,12 @@ ipc.on('update-css-styles', function(event, cssText){
 
 ipc.on('update-insta-css-style', function(event, cssText){
     style = document.getElementById('insta-query-style')
-    console.log("style: ", style)
+    //console.log("style: ", style)
     style.innerHTML = cssText
 })
 
 ipc.on('Increase-Font-Size', function(event){
-    console.log("Received command to increase fontsize")
+    //console.log("Received command to increase fontsize")
     if (currentFontSizeIndex != fontSizeArray.length - 2){
         currentFontSizeIndex += 1
         if (filtEditor !== null) {
@@ -260,7 +264,7 @@ ipc.on('Increase-Font-Size', function(event){
 })
 
 ipc.on('Decrease-Font-Size', function(event){
-    console.log("Received command to decrease fontsize")
+    // console.log("Received command to decrease fontsize")
     if (currentFontSizeIndex != 0){
         currentFontSizeIndex -= 1
         if (filtEditor !== null ){
@@ -305,6 +309,6 @@ ipc.on('update-preferences', function(event, preferenceObj){
     }
     currentFontSizeIndex = fontSizeArray.indexOf(parseInt(preferenceObj.fontSize))
     currentFontFamilyIndex = fontFamilyArray.indexOf(preferenceObj.fontFamily)
-    console.log({currentFontFamilyIndex, currentFontSizeIndex})
+    // console.log({currentFontFamilyIndex, currentFontSizeIndex})
     monaco.editor.setTheme(preferenceObj.theme)
 })
