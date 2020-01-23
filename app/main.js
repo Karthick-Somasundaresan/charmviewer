@@ -60,23 +60,26 @@ function createBundleMenu(bundleList){
 }
 
 
-ipc.on('enable-bundle', function(event, enabledBundleName){
-    enableBundle(enabledBundleName)
+ipc.on('enable-bundle', function(event, enabledBundleName, bookmarkList){
+    enableBundle(enabledBundleName,null, bookmarkList)
 })
 
 
-function enableBundle(menuItem, window, event){
-    bundleName = (typeof menuItem === "object")? menuItem.label : menuItem
-    appManager.getBundleHandler().enableBundle(bundleName)
-    // window.webContents.send("Bundle-Change-Event", menuItem.label)
-    bundleObj = appManager.getBundleHandler().getBundle(bundleName)
+function enableBundle(menuItem, window, bookmarkList, event){
+    bundleObj = null
+    bundleName = (typeof menuItem === "object" && menuItem !== null)? menuItem.label : menuItem
+    if (bundleName !== null) {
+        appManager.getBundleHandler().enableBundle(bundleName)
+        // window.webContents.send("Bundle-Change-Event", menuItem.label)
+        bundleObj = appManager.getBundleHandler().getBundle(bundleName)
+    }
     // console.log("Received bundleObj query count in main: ", bundleObj.getQueryListSize())
     // console.log("Received bundleObj in main: ", {bundleObj})
     // console.log("loaded Filename: ", window["filename"])
     if(window === undefined || window === null) {
         window = win
     }
-    actionHandler.filterFileWithBundle(window["filename"], bundleObj, function(filteredContents){
+    actionHandler.filterFileWithBundle(window["filename"], bundleObj, bookmarkList, function(filteredContents){
         // console.log("Inside callback!!!", filteredContents)
         window.webContents.send("Filtered-Output", filteredContents)
     })
@@ -369,7 +372,7 @@ ipc.on("Get-Enabled-Bundle", function(event){
 //     appManager.getBundleHandler().enableBundle(bundleName, true)
 // })
 
-ipc.on('create-instant-query', function(event, queryInfo){
+ipc.on('create-instant-query', function(event, queryInfo, bookmarkList){
     // console.log("Creating new query with info: ", {queryInfo})
     queryJson = {"qid": 1, "query": queryInfo.query, "color": {"fgColor": queryInfo.fgColor, "bgColor": queryInfo.bgColor}}
     instBundle = {"bundleName":"vwrInstaBndl", "queryCollection":{"1": queryJson}}
@@ -378,7 +381,7 @@ ipc.on('create-instant-query', function(event, queryInfo){
     cssText = convertBundlesToCSS([instBundleObj])
     win.webContents.send("update-insta-css-style", cssText)
     // appManager.getBundleHandler().enableBundle("vwrInstaBndl", true)
-    actionHandler.filterFileWithBundle(queryInfo.filename, instBundleObj, function(filteredContents){
+    actionHandler.filterFileWithBundle(queryInfo.filename, instBundleObj, bookMarkList, function(filteredContents){
         // console.log("Inside callback!!!", filteredContents)
         event.sender.send("Filtered-Output", filteredContents)
     })

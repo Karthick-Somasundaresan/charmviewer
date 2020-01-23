@@ -14,6 +14,7 @@ var currentFontSizeIndex = 3
 var currentFontFamilyIndex = 5
 var fileDecorList = []
 var filtDecorList = []
+var bookMarkedLines = []
 function uriFromPath(_path) {
 	var pathName = path.resolve(_path).replace(/\\/g, '/');
 	if (pathName.length > 0 && pathName.charAt(0) !== '/') {
@@ -32,7 +33,7 @@ dragDiv.addEventListener("mousedown", function(event){
 })
 
 selectBundle.addEventListener('change', function(){
-    ipc.send('enable-bundle', selectBundle.value)
+    ipc.send('enable-bundle', selectBundle.value, bookMarkedLines)
 })
 btnRunInstQury.addEventListener('click', function(e){
     // console.log("Instantly filtering logs")
@@ -40,7 +41,7 @@ btnRunInstQury.addEventListener('click', function(e){
     let clrInstBg = document.getElementById('clrInstBg')
     let clrInstFg = document.getElementById('clrInstFg')
     let filename = document.getElementById("file-info").innerHTML
-    ipc.send('create-instant-query', {"query": instaQueryTxt.value, "bgColor": clrInstBg.value, "fgColor": clrInstFg.value, "filename": filename})
+    ipc.send('create-instant-query', {"query": instaQueryTxt.value, "bgColor": clrInstBg.value, "fgColor": clrInstFg.value, "filename": filename}, bookMarkedLines)
     
 })
 document.addEventListener('mousemove', function(e){
@@ -69,6 +70,27 @@ amdRequire.config({
 	baseUrl: uriFromPath(path.join(__dirname, '../../node_modules/monaco-editor/min'))
 });
 
+
+function addMouseListenerForEditor(editor) {
+    console.log("Addeing mouse event listener")
+    editor.onMouseDown(function (e) {
+        //console.log('mousedown - ' + e.target.toString());
+        if([2, 3, 4].indexOf(e.target.type) !== -1){
+            //The user has clicked on the gutter area.
+            if (bookMarkedLines.indexOf(e.target.position.lineNumber) === -1){
+                //This line is clicked to bookmark
+                bookMarkedLines.push(e.target.position.lineNumber)
+            } else {
+                //This line is already bookmarked have to remove it
+                bookMarkedLines.splice(bookMarkedLines.indexOf(e.target.position.lineNumber), 1)
+            }
+            bookMarkedLines.sort((a, b) => a - b)
+        }
+        ipc.send('enable-bundle', selectBundle.value === "None"? null: selectBundle.value, bookMarkedLines)
+    });
+}
+
+
 ipc.on('Display-File', function(event, contents){
     // console.log("Received file contents:");
     fileInfo = document.getElementById("file-info")
@@ -76,6 +98,7 @@ ipc.on('Display-File', function(event, contents){
     updateLogViewWindow(contents, "container")
     bndlContainer.style.display = 'block'
     contents = null
+    // addMouseListenerForEditor(editor)
 })
 
 ipc.on("File-Content-Response", function(content){
@@ -99,27 +122,35 @@ ipc.on("Filtered-Output", function(event, filteredContent){
 function updateLogDecorations(viewEditor, line, cssRule) {
     removePreviousDecors()
     for (let index = 0; index < cssRule.length; index++) {
-        const element = cssRule[index];
-        if (viewEditor === filtEditor){
-            decor = viewEditor.deltaDecorations([], [{
-                range: new monaco.Range(index + 1, 1, index + 1, 1),
-                options: {
-                    isWholeLine: true,
-                    inlineClassName: element
-                }
-            }])
-            filtDecorList.push(decor)
-        } else {
-            decor = viewEditor.deltaDecorations([], [{
-                range: new monaco.Range(line[index + 1], 1, line[index + 1], 1),
-                options: {
-                    isWholeLine: true,
-                    inlineClassName: element
-                }
-            }])
-            fileDecorList.push(decor)
+        const elementArr = cssRule[index];
+        let element = ""
+        if(elementArr.length > 1) {
+            if(elementArr.indexOf("Bookmark") !== -1){
+                elementArr.splice(elementArr.indexOf("Bookmark"), 1)
+            }
         }
-         
+        element = elementArr[0]
+        if (element !== "Bookmark"){
+            if (viewEditor === filtEditor){
+                decor = viewEditor.deltaDecorations([], [{
+                    range: new monaco.Range(index + 1, 1, index + 1, 1),
+                    options: {
+                        isWholeLine: true,
+                        inlineClassName: element
+                    }
+                }])
+                filtDecorList.push(decor)
+            } else {
+                decor = viewEditor.deltaDecorations([], [{
+                    range: new monaco.Range(line[index + 1], 1, line[index + 1], 1),
+                    options: {
+                        isWholeLine: true,
+                        inlineClassName: element
+                    }
+                }])
+                fileDecorList.push(decor)
+            }
+        }
     }
 } 
 
@@ -145,10 +176,12 @@ function updateLogViewWindow(content, containerId) {
                     value: content.logs.join('\n'),
                     automaticLayout: true,
                     readOnly: true,
+                    glyphMargin: true,
                     minimap: {enabled:false},
                     fontSize: fontSizeArray[currentFontSizeIndex],
                     fontFamily: fontFamilyArray[currentFontFamilyIndex]
                 });
+                addMouseListenerForEditor(editor)
             } else {
                 editor.setValue(content.logs.join('\n'))
             }
