@@ -123,34 +123,55 @@ function updateLogDecorations(viewEditor, line, cssRule) {
     removePreviousDecors()
     for (let index = 0; index < cssRule.length; index++) {
         const elementArr = cssRule[index];
+        bookmarked = false
         let element = ""
-        if(elementArr.length > 1) {
-            if(elementArr.indexOf("Bookmark") !== -1){
-                elementArr.splice(elementArr.indexOf("Bookmark"), 1)
-            }
-        }
-        element = elementArr[0]
-        if (element !== "Bookmark"){
-            if (viewEditor === filtEditor){
-                decor = viewEditor.deltaDecorations([], [{
-                    range: new monaco.Range(index + 1, 1, index + 1, 1),
-                    options: {
-                        isWholeLine: true,
-                        inlineClassName: element
-                    }
-                }])
-                filtDecorList.push(decor)
+        for(let elemArrIndex = 0; elemArrIndex<elementArr.length; elemArrIndex++){
+            element = elementArr[elemArrIndex]
+            if (element !== "Bookmark"){
+                if (viewEditor === filtEditor){
+                    decor = viewEditor.deltaDecorations([], [{
+                        range: new monaco.Range(index + 1, 1, index + 1, 1),
+                        options: {
+                            isWholeLine: true,
+                            inlineClassName: element
+                        }
+                    }])
+                    filtDecorList.push(decor)
+                } else {
+                    decor = viewEditor.deltaDecorations([], [{
+                        range: new monaco.Range(line[index + 1], 1, line[index + 1], 1),
+                        options: {
+                            isWholeLine: true,
+                            inlineClassName: element
+                        }
+                    }])
+                    fileDecorList.push(decor)
+                }
             } else {
-                decor = viewEditor.deltaDecorations([], [{
-                    range: new monaco.Range(line[index + 1], 1, line[index + 1], 1),
-                    options: {
-                        isWholeLine: true,
-                        inlineClassName: element
-                    }
-                }])
-                fileDecorList.push(decor)
+                if (viewEditor === filtEditor){
+                    decor = viewEditor.deltaDecorations([], [{
+                        range: new monaco.Range(index + 1, 1, index + 1, 1),
+                        options: {
+                            isWholeLine: true,
+                            glyphMarginClassName: 'bookmark'
+                        }
+                    }])
+                    filtDecorList.push(decor)
+                } else {
+                    decor = viewEditor.deltaDecorations([], [{
+                        range: new monaco.Range(line[index + 1], 1, line[index + 1], 1),
+                        options: {
+                            isWholeLine: true,
+                            glyphMarginClassName: 'bookmark'
+                        }
+                    }])
+                    fileDecorList.push(decor)
+                }
+
             }
+
         }
+
     }
 } 
 
@@ -193,6 +214,7 @@ function updateLogViewWindow(content, containerId) {
                     automaticLayout: true,
                     lineNumbers: mapLineNumbers,
                     readOnly: true,
+                    glyphMargin: true,
                     minimap: {enabled:false},
                     fontSize: fontSizeArray[currentFontSizeIndex],
                     fontFamily: fontFamilyArray[currentFontFamilyIndex]
@@ -203,24 +225,6 @@ function updateLogViewWindow(content, containerId) {
             
             updateLogDecorations(filtEditor, content.lines, content.rules)
             updateLogDecorations(editor, content.lines, content.rules)
-            // filtEditor.deltaDecorations([],[
-            //     {
-            //         range: new monaco.Range(2,1,2,1),
-            //         options: {
-            //             isWholeLine: true, 
-            //             className: "trialCSS"
-            //         }
-            //     }
-            // ])
-            // filtEditor.deltaDecorations([],[
-            //     {
-            //         range: new monaco.Range(1,1,1,1),
-            //         options: {
-            //             isWholeLine: true, 
-            //             className: "testCSS"
-            //         }
-            //     }
-            // ])
             filtEditor.onMouseDown(filterEditerMouseDown)
 
         }
@@ -231,32 +235,11 @@ function updateLogViewWindow(content, containerId) {
 }
 
 function filterEditerMouseDown(event) {
-        // console.log({event})
 
         clickedLine = event.target.position.lineNumber;
         mappedLine = mapLineNumbers(clickedLine)
-        // console.log("Clicked on line: ", clickedLine)
-        // console.log("Mapped line in the main editor: ", mappedLine)
         if(editor !== null && editor !== undefined) {
             editor.revealLine(mappedLine)
-            // editor.deltaDecorations([],[
-            //     {
-            //         range: new monaco.Range(3,1,3,1),
-            //         options: {
-            //             isWholeLine: true, 
-            //             className: "testCSS"
-            //         }
-            //     }
-            // ])
-            // editor.deltaDecorations([],[
-            //     {
-            //         range: new monaco.Range(2,1,2,1),
-            //         options: {
-            //             isWholeLine: true, 
-            //             className: "trialCSS"
-            //         }
-            //     }
-            // ])
             editor.focus()
         }
 }
