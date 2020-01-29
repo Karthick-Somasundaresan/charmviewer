@@ -59,6 +59,10 @@ function createBundleMenu(bundleList){
     return bundleMenu
 }
 
+ipc.on('add-bookmark', function(event, bookmarkList){
+    enabledBundleName = appManager.getBundleHandler().getEnabledBundleName()
+    enableBundle(enabledBundleName === ""? null:enabledBundleName, null, bookmarkList)
+})
 
 ipc.on('enable-bundle', function(event, enabledBundleName, bookmarkList){
     enableBundle(enabledBundleName,null, bookmarkList)
@@ -207,7 +211,8 @@ function createWindow (allBundles, bundleNameList) {
 
   // and load the index.html of the app.
 
-  win.loadFile('windows/fileViewWindow.html')
+//   console.log("Win load: ", __dirname + '/windows/fileViewWindow.html')
+  win.loadFile(__dirname + '/windows/fileViewWindow.html')
   // Open the DevTools.
   win.webContents.openDevTools()
 
@@ -380,8 +385,9 @@ ipc.on('create-instant-query', function(event, queryInfo, bookmarkList){
     instBundleObj = appManager.getBundleHandler().getBundle("vwrInstaBndl")
     cssText = convertBundlesToCSS([instBundleObj])
     win.webContents.send("update-insta-css-style", cssText)
-    // appManager.getBundleHandler().enableBundle("vwrInstaBndl", true)
-    actionHandler.filterFileWithBundle(queryInfo.filename, instBundleObj, bookMarkList, function(filteredContents){
+    appManager.getBundleHandler().enableBundle("vwrInstaBndl", true)
+    // consol.log("BookmarkList: ", bookmarkList)
+    actionHandler.filterFileWithBundle(queryInfo.filename, instBundleObj, bookmarkList, function(filteredContents){
         // console.log("Inside callback!!!", filteredContents)
         event.sender.send("Filtered-Output", filteredContents)
     })

@@ -1,5 +1,5 @@
 const ipc = require('electron').ipcRenderer
-const amdLoader = require('../../node_modules/monaco-editor/min/vs/loader.js');
+const amdLoader = require(__dirname + '/../../node_modules/monaco-editor/min/vs/loader.js');
 const path = require('path')
 const amdRequire = amdLoader.require;
 const amdDefine = amdLoader.require.define
@@ -86,7 +86,7 @@ function addMouseListenerForEditor(editor) {
             }
             bookMarkedLines.sort((a, b) => a - b)
         }
-        ipc.send('enable-bundle', selectBundle.value === "None"? null: selectBundle.value, bookMarkedLines)
+        ipc.send('add-bookmark', bookMarkedLines)
     });
 }
 
