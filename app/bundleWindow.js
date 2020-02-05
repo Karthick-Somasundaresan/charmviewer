@@ -33,7 +33,9 @@ function createQueryLstHTML(queryCollection){
 }
 
 function getRequiredInfo(selectedInfo = 0){
-    appManager.initializeBundles(app.getAppPath() + "/../test/")
+    // appManager.initializeBundles(app.getAppPath())
+    appManager.initializeBundles(app.getPath("userData"))
+    // appManager.initializeBundles(app.getAppPath() + "/../test/")
     let bundleHandler = appManager.getBundleHandler()
     bundleList = bundleHandler.getAllBundleNames()
     // console.log(bundleList)

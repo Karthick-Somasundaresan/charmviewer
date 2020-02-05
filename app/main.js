@@ -182,7 +182,9 @@ function createApplicationMenu(bundleList){
 function convertBundlesToCSS(allBundles) {
     let cssText = ""
     //console.log(JSON.stringify(allBundles))
-    allBundles.forEach(bundle => {
+    //allBundles.forEach(bundle => {
+    for (const index in allBundles) {
+        bundle = allBundles[index]
         let bundleName = bundle.bundleName
         for (const item in bundle.queryCollection) {
             if (bundle.queryCollection.hasOwnProperty(item)) {
@@ -192,7 +194,7 @@ function convertBundlesToCSS(allBundles) {
                 cssText += "." + bundleName + "_" + qid + " {" + "color:" + element.color.fgColor + " !important; background:" +element.color.bgColor + "}\n"
             }
         }
-    }); 
+    }; 
     return cssText
 }
 
@@ -214,7 +216,7 @@ function createWindow (allBundles, bundleNameList) {
 //   console.log("Win load: ", __dirname + '/windows/fileViewWindow.html')
   win.loadFile(__dirname + '/windows/fileViewWindow.html')
   // Open the DevTools.
-  win.webContents.openDevTools()
+//   win.webContents.openDevTools()
 
   // Emitted when the window is closed.
   win.on('closed', () => {
@@ -235,7 +237,8 @@ function createWindow (allBundles, bundleNameList) {
 // Some APIs can only be used after this event occurs.
 app.on('ready', function(){
     // console.log("Application is ready!")
-    appManager.initializeBundles(app.getAppPath()+ "/../test/")
+    appManager.initializeBundles(app.getPath("userData"))
+    // appManager.initializeBundles(app.getAppPath()+ "/../test/")
     // appBundleHandler = new BundleHandler(app.getAppPath() + "/../test/")
     // console.log("App Data path:", app.getAppPath())
     // console.log("Bundle List: ", appBundleHandler.getAllBundleNames())
@@ -278,12 +281,16 @@ function updateBundleList() {
     win.webContents.send('bundle-names', bundleNames)
 }
 
-ipc.on('Create-Bundle', function(event, bundleObj){
-    // console.log("Received Create-Bundle Event with arg:", bundleObj)
-    addBundleNameToMenu(bundleObj.bundleName)
-    appManager.getBundleHandler().createBundle(bundleObj.bundleName, bundleObj.queryList)
+ipc.on('Create-Bundle', function(event, bundleJson){
+    // console.log("Received Create-Bundle Event with arg:", bundleJson)
+    addBundleNameToMenu(bundleJson.bundleName)
+    appManager.getBundleHandler().createBundle(bundleJson.bundleName, bundleJson.queryList)
     actionHandler.updateBundleWindow()
     updateBundleList()
+    bundleArray = []
+    bundleArray.push(appManager.getBundleHandler().getBundle(bundleJson.bundleName))
+    cssText = convertBundlesToCSS(bundleArray)
+    win.webContents.send("update-css-styles", cssText)
     
 })
 
@@ -340,10 +347,18 @@ ipc.on('Import-Bundle-File', function(event, fileName){
         let bundleJson = undefined
         try {
             bundleJson = JSON.parse(rawBundle)
-            appManager.getBundleHandler().importBundle(bundleJson)
+            // dialog.showErrorBox("BundleJson Created", "BundleJson Created")
+            var bundleHandler = appManager.getBundleHandler()
+            // dialog.showErrorBox("Identified Handler", "Identified Handler")
+            // dialog.showErrorBox("App path", app.getPath("userData"))
+            bundleHandler.importBundle(bundleJson)
+            // dialog.showErrorBox("BundleJson Imported", "BundleJson Imported")
             actionHandler.updateBundleWindow()
+            // dialog.showErrorBox("Action Handler updated", "Action Handler updated")
         } catch (error) {
-            dialog.showErrorBox("Unable to open file", "Unable to open file:" + fileName)
+            console.log("Error: ", "_"+error+"_")
+            dialog.showErrorBox("Unable to open file", "Unable to open file:" + fileName + "\n Error:", error )
+            dialog.showErrorBox("Raw Bundle info:", "RawBundle: " + rawBundle + " BundleJson: " + bundleJson)
         }
     }
 })

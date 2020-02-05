@@ -6,6 +6,8 @@ const amdDefine = amdLoader.require.define
 const btnRunInstQury = document.getElementById('btnRunInstQury')
 const bndlContainer = document.getElementById('enable-bundle-container')
 const selectBundle = document.getElementById('select-bundle')
+const electron = require('electron')
+const dialog = electron.remote.dialog
 var editor = null
 var filtEditor = null
 const fontSizeArray = [8, 10, 12, 14, 16, 18, 20, 24, 28, 32]
@@ -223,6 +225,7 @@ function updateLogViewWindow(content, containerId) {
                 filtEditor.setValue(content.logs.join('\n'))
             }
             
+            // dialog.showErrorBox("Applied Rules", "Applied Rules:" + content.rules)
             updateLogDecorations(filtEditor, content.lines, content.rules)
             updateLogDecorations(editor, content.lines, content.rules)
             filtEditor.onMouseDown(filterEditerMouseDown)
