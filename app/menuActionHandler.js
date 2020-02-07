@@ -9,7 +9,7 @@ function openBundleWindow(item, focusedWindow){
     // console.log("Received Item: ", {item})
     let modalPath = path.join("file://", __dirname, "./windows/bundleWindow.html")
     // console.log("Modal PAth: ", modalPath)
-    bundleWindow = new BrowserWindow({width: 760, height: 280, 
+    bundleWindow = new BrowserWindow({width: 770, height: 280, 
         show: false,
         // backgroundColor: '#2e2c29',
         webPreferences: {
