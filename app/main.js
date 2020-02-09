@@ -354,6 +354,7 @@ ipc.on('Import-Bundle-File', function(event, fileName){
             bundleHandler.importBundle(bundleJson)
             // dialog.showErrorBox("BundleJson Imported", "BundleJson Imported")
             actionHandler.updateBundleWindow()
+            updateBundleList()
             // dialog.showErrorBox("Action Handler updated", "Action Handler updated")
         } catch (error) {
             console.log("Error: ", "_"+error+"_")
