@@ -5,7 +5,7 @@
   "description": "A convenient tool for viewing logs.",
   "main": "app/main.js",
   "dependencies": {
-    "async": "^3.1.0",
+    "async": "^3.2.2",
     "event-stream": "^4.0.1",
     "lodash": "^4.17.15",
     "lucene": "^2.1.0",
